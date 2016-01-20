@@ -1,0 +1,257 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/titletxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/titlebutton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titletxt"
+        android:text="@string/Title" />
+
+    <Button
+        android:id="@+id/descbutton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Description"
+        android:layout_above="@+id/logobutton"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:id="@+id/logobutton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Logo"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <FrameLayout
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/titlebutton"
+        android:id="@+id/frameLayout"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentStart="false"
+        android:layout_centerVertical="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Starts"
+            android:textSize="18sp"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal|top" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Iqama"
+            android:textSize="18sp"
+            android:id="@+id/textView3"
+            android:layout_gravity="right|top" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fajr"
+            android:textSize="18sp"
+            android:id="@+id/Fajr_static"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginTop="-5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:id="@+id/fajr_start_time"
+            android:layout_gravity="center"
+            android:layout_marginTop="-5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/fajr_iqama_time"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginTop="-5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Zuhr"
+            android:textSize="18sp"
+            android:id="@+id/Zurh_static"
+            android:layout_gravity="left|bottom"
+            android:layout_marginTop="-10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/zuhr_start_time"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginTop="-10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/zuhr_iqama_time"
+            android:layout_gravity="right|bottom"
+            android:layout_marginTop="-10dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:id="@+id/frameLayout2"
+        android:layout_below="@+id/frameLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="0dp"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/frameLayout"
+        android:layout_alignEnd="@+id/frameLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asr"
+            android:textSize="18sp"
+            android:id="@+id/Asr_static"
+            android:layout_gravity="left|top"
+            android:layout_marginTop="-0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/asr_start_time"
+            android:layout_gravity="center_horizontal|top" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/asr_iqama_time"
+            android:layout_gravity="right|top" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Maghrib"
+            android:textSize="18sp"
+            android:id="@+id/Maghrib_static"
+            android:layout_gravity="left|center_vertical"
+            android:layout_marginTop="-0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/maghrib_start_time"
+            android:layout_gravity="center"
+            android:layout_marginTop="-0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/maghrib_iqama_time"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginTop="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Isha"
+            android:textSize="18sp"
+            android:id="@+id/Isha_static"
+            android:layout_gravity="left|bottom"
+            android:layout_marginTop="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/isha_start_time"
+            android:layout_gravity="center_horizontal|bottom" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="18sp"
+            android:id="@+id/isha_iqama_time"
+            android:layout_gravity="right|bottom" />
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Updated on : "
+        android:id="@+id/Updated_static"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/salat_time_updated"
+        android:layout_toRightOf="@+id/Updated_static"
+        android:layout_toEndOf="@+id/Updated_static" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/frameLayout2"
+        android:layout_above="@+id/descbutton"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:id="@+id/hadith_textview"
+            android:fontFamily=" "
+            android:layout_below="@+id/frameLayout2"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp" />
+    </ScrollView>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/compass"
+        android:id="@+id/imageView"
+        android:layout_toRightOf="@+id/frameLayout"
+        android:layout_toEndOf="@+id/frameLayout"
+        android:layout_alignTop="@+id/frameLayout"
+        android:layout_marginTop="-50dp" />
+
+</RelativeLayout>
