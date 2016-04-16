@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Don't need these bad boys-->
+
+    <!--<PreferenceCategory android:title="@string/pref_user_profile" >-->
+        <!--<EditTextPreference-->
+            <!--android:title="@string/pref_user_name"-->
+            <!--android:summary="@string/pref_user_name_summary"-->
+            <!--android:key="prefUsername"/>-->
+    <!--</PreferenceCategory>-->
+
+    <PreferenceCategory android:title="@string/pref_update_setting" >
+
+        <ListPreference
+            android:key="prefHadithSource"
+            android:entries="@array/hadith_source"
+            android:summary="@string/pref_hadith_cites"
+            android:entryValues="@array/hadith_sourceValues"
+            android:title="@string/pref_hadith_source" />
+
+        <ListPreference
+            android:key="prefFontSource"
+            android:entries="@array/font_source"
+            android:summary="Open Source Font Styles"
+            android:entryValues="@array/font_sourceValues"
+            android:title="Font Sources"/>
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="prefSendReport"
+            android:summary="@string/pref_send_report_summary"
+            android:title="@string/pref_send_report" >
+        </CheckBoxPreference>
+
+
+    </PreferenceCategory>
+</PreferenceScreen>

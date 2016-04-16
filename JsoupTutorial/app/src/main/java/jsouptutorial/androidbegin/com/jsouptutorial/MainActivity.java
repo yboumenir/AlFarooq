@@ -1,65 +1,68 @@
 package com.androidbegin.jsouptutorial;
 
 import java.io.IOException;
-        import java.io.InputStream;
-        import java.util.Calendar;
-        import java.util.Random;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Random;
 
-        import org.jsoup.Jsoup;
-        import org.jsoup.nodes.Document;
-        import org.jsoup.select.Elements;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
-        import android.app.AlarmManager;
-        import android.app.PendingIntent;
-        import android.content.Context;
-        import android.content.Intent;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-        import android.graphics.Typeface;
-        import android.media.MediaPlayer;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.app.Activity;
-        import android.app.ProgressDialog;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.util.Log;
-        import android.view.View;
-        import android.view.View.OnClickListener;
-        import android.widget.Button;
+import android.graphics.RadialGradient;
+import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.SystemClock;
+import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewDebug;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-        import android.widget.TextView;
-
-
+import android.widget.TextView;
 
 
 // to save using sharedprefreferences
 import android.content.SharedPreferences;
-        import android.app.Activity;
-        import android.content.SharedPreferences;
-        import android.os.Bundle;
-        import android.app.Notification;
-        import android.app.NotificationManager;
-        import android.app.PendingIntent;
-        import android.content.BroadcastReceiver;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.util.Log;
-        import android.widget.Toast;
-        import android.app.AlarmManager;
-        import android.app.PendingIntent;
-        import android.content.BroadcastReceiver;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.PowerManager;
-        import android.widget.Toast;
+import android.app.Activity;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.os.PowerManager;
+import android.widget.Toast;
 
 // from Alarm class
-        import android.app.Service;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.os.IBinder;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
 
 
 import android.app.Activity;
@@ -88,9 +91,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+// http://viralpatel.net/blogs/android-preferences-activity-example/
+//  saving user preference stuff
 
+import android.preference.PreferenceActivity;
+
+import jsouptutorial.androidbegin.com.jsouptutorial.AlarmActivitiy;
+import jsouptutorial.androidbegin.com.jsouptutorial.UserSettingActivity;
 
 public class MainActivity extends Activity {
+
+    // saving preference stuff
+    private static final int RESULT_SETTINGS = 1;
+
 
     Context context;
 
@@ -98,7 +111,6 @@ public class MainActivity extends Activity {
     // URL Address
     String url = "http://alfarooqmasjid.org";
     ProgressDialog mProgressDialog;
-
 
 
     // to save the salat times data
@@ -139,6 +151,13 @@ public class MainActivity extends Activity {
     PendingIntent pendingIntent;
     AlarmManager alarmManager;
     BroadcastReceiver mReceiver;
+
+
+    // String for font style (default)
+    String Font_style = "3";
+
+    // String for hadith source (default)
+    String Hadith_source = Integer.toString(1);
 
 
     @Override
@@ -183,10 +202,8 @@ public class MainActivity extends Activity {
         // Fonts for hadith
 
 
-
-
         //SharedPreferences salat_times = getPreferences(0);
-       // String Fajr_times = salat_times.getString("fajr_start_time", fajr);
+        // String Fajr_times = salat_times.getString("fajr_start_time", fajr);
 
         // to save a value
         //SharedPreferences fajr_time_save = getPreferences(0);
@@ -253,30 +270,27 @@ public class MainActivity extends Activity {
         isha_iqama_time.setText(Isha_iqama_times);
 
 
-
-        int hour_current = salat_times.getInt("hour",hour);
-        int minute_current =salat_times.getInt("minute", minute);
+        int hour_current = salat_times.getInt("hour", hour);
+        int minute_current = salat_times.getInt("minute", minute);
         int second_current = salat_times.getInt("second", second);
         int Month_current = salat_times.getInt("Month", Month);
         int Date_current = salat_times.getInt("Date", Date);
-        int Year_current = salat_times.getInt("Year",Year);
-        int AmPm_current = salat_times.getInt("AmPm",AmPm);
+        int Year_current = salat_times.getInt("Year", Year);
+        int AmPm_current = salat_times.getInt("AmPm", AmPm);
 
         String am_or_pm;
-        if (AmPm == 0){
+        if (AmPm == 0) {
             am_or_pm = "AM";
-        }
-        else
-        {
+        } else {
             am_or_pm = "PM";
         }
 
-        String Current_time = Integer.toString(Month_current) + "/"+ Integer.toString(Date_current) + "/" +Integer.toString(Year_current) + " at " + Integer.toString(hour_current) + ":" + Integer.toString(minute_current) + ":" + Integer.toString(second_current) +am_or_pm;
+        String Current_time = Integer.toString(Month_current+1) + "/" + Integer.toString(Date_current) + "/" + Integer.toString(Year_current) + " at " + Integer.toString(hour_current) + ":" + Integer.toString(minute_current) + ":" + Integer.toString(second_current) + am_or_pm;
 
         TextView current_time = (TextView) findViewById(R.id.salat_time_updated);
         current_time.setText(Current_time);
 
-        mediaPlayer= MediaPlayer.create(this,R.raw.adhan);
+        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
         RegisterAlarmBroadcast();
 
         //alarm.SetAlarm(this);
@@ -302,17 +316,88 @@ public class MainActivity extends Activity {
          */
 
 
-
-
-            // Using Elements to get the Meta data
-            // Elements description = document.select("meta[name=description]");
-            //Elements description = document.select("<tbody>");
-            // Locate the content attribute
-            //desc = description.attr("<td>");
+        // Using Elements to get the Meta data
+        // Elements description = document.select("meta[name=description]");
+        //Elements description = document.select("<tbody>");
+        // Locate the content attribute
+        //desc = description.attr("<td>");
         //SaveInPreference(this,"fajr_start_time","100");
         //getPrefString(this,fajr,"fajr_start_time");
 
+        // preference stuff...?
+        // showUserSettings();
     }
+
+    /**
+     * Use this method to instantiate your menu, and add your items to it. You
+     * should return true if you have added items to it and want the menu to be displayed.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate our menu from the resources by using the menu inflater.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        // It is also possible add items here. Use a generated id from
+        // resources (ids.xml) to ensure that all menu ids are distinct.
+
+//        MenuItem locationItem = menu.add(0, R.id.menu_location, 0, R.string.menu_location);
+//        locationItem.setIcon(R.drawable.ic_action_location);
+//
+//        // Need to use MenuItemCompat methods to call any action item related methods
+//        MenuItemCompat.setShowAsAction(locationItem, MenuItem.SHOW_AS_ACTION_IF_ROOM);
+
+        return true;
+    }
+    // END_INCLUDE(create_menu)
+
+    // BEGIN_INCLUDE(menu_item_selected)
+    /**
+     * This method is called when one of the menu items to selected. These items
+     * can be on the Action Bar, the overflow menu, or the standard options menu. You
+     * should return true if you handle the selection.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+//            case R.id.menu_refresh:
+//
+//                // Here we might start a background refresh task
+//                return true;
+
+//            case R.id.menu_location:
+//                // Here we might call LocationManager.requestLocationUpdates()
+//                return true;
+
+            case R.id.menu_settings:
+                // To save user preferences
+                Intent i = new Intent(this, UserSettingActivity.class);
+                startActivityForResult(i,RESULT_SETTINGS);
+
+                Log.d("DEBUG","onoptionsitemselected");
+                // Here we would open up our settings activity
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode,Intent data)
+    {
+        super.onActivityResult(requestCode,resultCode,data);
+        switch (requestCode) {
+            case RESULT_SETTINGS:
+
+                Log.d("DEBUG","onActivitiyResult");
+                chooseFontSource();
+                showUserSettings();
+
+
+                break;
+        }
+    }
+
 
     //To save
     public static void SaveInPreference(Context mContext, String key, String objString) {
@@ -374,68 +459,209 @@ public class MainActivity extends Activity {
                 // get the title of the url
                 String Title = doc.title();
                 // print it out
-                System.out.println("Title: "+ Title);
+                System.out.println("Title: " + Title);
                 // Get the table of data from the url
                 Elements tbody = doc.select("tbody");
                 // print it out
-                System.out.println("tbody.first: "+ tbody.first());
+                System.out.println("tbody.first: " + tbody.first());
 
                 // get the table of salat times
                 Elements tr = tbody.select("tr");
                 // from the table, we get the first element
                 Elements Fajr = tr.eq(0);
                 // now we get the time
-                Fajr_time= Fajr.select("td").eq(1).text();
-                Fajr_time_iqama =Fajr.select("td").eq(2).text();
+                Fajr_time = Fajr.select("td").eq(1).text();
+                Fajr_time_iqama = Fajr.select("td").eq(2).text();
 
                 Elements Zuhr = tr.eq(1);
                 Zuhr_time = Zuhr.select("td").eq(1).text();
                 Zuhr_time_iqama = Zuhr.select("td").eq(2).text();
                 Elements Asr = tr.eq(2);
-                Asr_time=Asr.select("td").eq(1).text();
-                Asr_time_iqama =Asr.select("td").eq(2).text();
+                Asr_time = Asr.select("td").eq(1).text();
+                Asr_time_iqama = Asr.select("td").eq(2).text();
                 Elements Maghrib = tr.eq(3);
                 Maghrib_time = Maghrib.select("td").eq(1).text();
                 Maghrib_time_iqama = Maghrib.select("td").eq(2).text();
                 Elements Isha = tr.eq(4);
                 Isha_time = Isha.select("td").eq(1).text();
-                Isha_time_iqama =Isha.select("td").eq(2).text();
+                Isha_time_iqama = Isha.select("td").eq(2).text();
 
-                title = Fajr_time+"," +Zuhr_time +","+Asr_time+","+Maghrib_time+","+Isha_time;
+                title = Fajr_time + "," + Zuhr_time + "," + Asr_time + "," + Maghrib_time + "," + Isha_time;
 
                 // getting hadith
 
-                Random hadith_book = new Random();
-                int hadith_book_number = hadith_book.nextInt(97);
+                // problem: some book volumes have different number of chapters, and different volumes.
+                // to find number of volumes -> search for book_number
+                // to find number of chapters -> search for echapno
+                // then generate random number of bounded by max size of volume and chapter number.
 
-                String hadith_url = "http://sunnah.com/bukhari/" + String.valueOf(hadith_book_number);
-                // Fetch the html webpage
-                Document hadith_doc = Jsoup.connect(hadith_url).get();
+                // so first find website
+                // next find maxs
+                // then generate bounded random number
+                // then finally display
+
+                // alternative is to look at each volume, then chapter to obtain list of maximum bounds
+
+
+//                Random hadith_book = new Random();
+//                int hadith_book_number = hadith_book.nextInt(97);
+
+                String hadith_url = "http://sunnah.com/bukhari/"; // + String.valueOf(hadith_book_number);
+
+
+                // problem: when app is run before configuring setting, it will crash here
+                // so we will try to catch it first
+
+                try {
+                    Log.e("DEBUG_Hadith_source",Hadith_source);
+
+                    // Fetch the html webpage using one of the below strings:
+                    if (Hadith_source.equals(Integer.toString(1))) {
+                        hadith_url = "http://sunnah.com/bukhari/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(2))) {
+                        hadith_url = "http://sunnah.com/muslim/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(3))) {
+                        hadith_url = "http://sunnah.com/nasai/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(4))) {
+                        hadith_url = "http://sunnah.com/abudawud/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(5))) {
+                        hadith_url = "http://sunnah.com/tirmidhi/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(6))) {
+                        hadith_url = "http://sunnah.com/ibnmajah/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(7))) {
+                        hadith_url = "http://sunnah.com/malik/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(8))) {
+                        hadith_url = "http://sunnah.com/nawawi40/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(9))) {
+                        hadith_url = "http://sunnah.com/riyadussaliheen/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(10))) {
+                        hadith_url = "http://sunnah.com/adab/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(11))) {
+                        hadith_url = "http://sunnah.com/qudsi40/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(12))) {
+                        hadith_url = "http://sunnah.com/shamail/";// + String.valueOf(hadith_book_number);
+                    } else if (Hadith_source.equals(Integer.toString(13))) {
+                        hadith_url = "http://sunnah.com/bulugh/";// + String.valueOf(hadith_book_number);
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                    Log.d(TAG, "... Failed");
+
+                    //throw new RuntimeException(e);
+                }
+
+                // debug statement to see how many chapters we have
+//                String debug_hadith_url = "http://sunnah.com/bukhari/";
+
+                // lazy me
+                String debug_hadith_url = hadith_url;
+                Document debug_hadith_doc = Jsoup.connect(debug_hadith_url).get();
+
+
+                Elements book_num_classes = debug_hadith_doc.getElementsByClass("book_number");
+
+
+                // Now get size of class -> bound of max random number
+                int max_book_size = book_num_classes.size();
+
+                // debug output
+                Log.e("DEBUG_max_book_size",Integer.toString(max_book_size));
+
+
+                Random hadith_book = new Random();
+
+                // now we generate the random number for the hadith volume
+                // sometimes we get a hadith_book_number = 0, which doesn't exist
+                int hadith_book_number = hadith_book.nextInt(max_book_size - 1) + 1;
+
+                // debug output
+                Log.e("DEBUG_hadith_book_num", Integer.toString(hadith_book_number));
+
+
+                // now we regenerate url with new book volume number
+
+                debug_hadith_url = debug_hadith_url + Integer.toString(hadith_book_number);
+
+                // debug output
+                Log.e("DEBUG_url",debug_hadith_url);
+
+
+                // now we look for echapno for chapter number
+                // first reload document with chapter
+                debug_hadith_doc = Jsoup.connect(debug_hadith_url).get();
+
+
+                Elements chapeter_numbers = debug_hadith_doc.getElementsByClass("echapno");
+                int max_chapter_size = chapeter_numbers.size();
+
+                // debug output
+                Log.e("DEBUG_max_chapter_size",Integer.toString(max_chapter_size));
+
+
+                Random chapter_number = new Random();
+                int chapter_number_selected = chapter_number.nextInt(max_chapter_size - 1) + 1;
+
+                // debug output
+                Log.e("DEBUG_chapter_number_se",Integer.toString(chapter_number_selected));
+
+                // final update of hadith url
+                debug_hadith_url+= "/" + Integer.toString(chapter_number_selected);
+
+                // debug output
+                Log.e("DEBUG_hadith_url",debug_hadith_url);
+
+
+//
+//                String book_num =hadith_doc.getElementsByClass("book_number").text();
+//                Log.e("DEBUG",book_num);
+
+                // generate random number to pick up hadith.
+
+//                Random hadith_number_random = new Random();
+                // hadith_number_random.nextInt(7);
+
+//                int hadith_number = (hadith_number_random.nextInt(7));
+
+                // Hadith title
+
+                //int hadith_number =1;
+//                hadith_title = hadith_classes.eq(hadith_number).eq(0).eq(0).text();
+
+
+                Document hadith_doc = Jsoup.connect(debug_hadith_url).get();
                 // get the title of the url
                 String title = hadith_doc.title();
                 // print it out
-                System.out.println("Title: "+ title);
+                System.out.println("Title: " + title);
                 // Get the table of data from the url
                 Elements hadith_body = hadith_doc.select("div");
                 // print it out
                 Elements hadith_classes = hadith_doc.getElementsByClass("hadith_narrated");
 
-                // generate random number to pick up hadith.
+                Log.e("DEBUG_hadith_classes",hadith_classes.toString());
 
-                Random hadith_number_random = new Random();
-                // hadith_number_random.nextInt(7);
 
-                int hadith_number = (hadith_number_random.nextInt(7));
+                hadith_title = hadith_classes.text();
+                Log.e("DEBUG_hadith_title",hadith_title);
 
-                // Hadith title
 
-                //int hadith_number =1;
-                hadith_title = hadith_classes.eq(hadith_number).eq(0).eq(0).text();
+
+//                hadith_title = hadith_classes.eq(chapter_number_selected).eq(0).eq(0).text();
+
                 //System.out.println("hadith 1:  " + hadith_title);
+
 
                 Elements hadith_texts = hadith_doc.getElementsByClass("text_details");
 
-                hadith_text = hadith_texts.eq(hadith_number).eq(0).eq(0).text();
+                hadith_text = hadith_texts.text();
+
+
+
+//                Log.e("DEBUG_hadith_doc",hadith_doc.toString());
+
+                Log.e("DEBUG_hadith_text",hadith_text.toString());
+
+//                hadith_text = hadith_texts.eq(chapter_number_selected).eq(0).eq(0).text();
 
 
             } catch (IOException e) {
@@ -458,15 +684,13 @@ public class MainActivity extends Activity {
             AmPm = c.get(Calendar.AM_PM);
 
             String am_or_pm;
-            if (AmPm == 0){
+            if (AmPm == 0) {
                 am_or_pm = "AM";
-            }
-            else
-            {
+            } else {
                 am_or_pm = "PM";
             }
 
-            String Current_time = Integer.toString(Month) + "/"+ Integer.toString(Date) + "/" +Integer.toString(Year) + " at " + Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second) +am_or_pm;
+            String Current_time = Integer.toString(Month + 1) + "/" + Integer.toString(Date) + "/" + Integer.toString(Year) + " at " + Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second) + am_or_pm;
 
             TextView current_time = (TextView) findViewById(R.id.salat_time_updated);
             current_time.setText(Current_time);
@@ -508,43 +732,74 @@ public class MainActivity extends Activity {
             // Now we will save the times...
             SharedPreferences salat_times = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
             SharedPreferences.Editor editor = salat_times.edit();
-            editor.putString("fajr_start_time",Fajr_time);
-            editor.putString("fajr_iqama_time",Fajr_time_iqama);
-            editor.putString("zuhr_start_time",Zuhr_time);
-            editor.putString("zuhr_iqama_time",Zuhr_time_iqama);
-            editor.putString("asr_start_time",Asr_time);
-            editor.putString("asr_iqama_time",Asr_time_iqama);
-            editor.putString("maghrib_start_time",Maghrib_time);
-            editor.putString("maghrib_iqama_time",Maghrib_time_iqama);
-            editor.putString("isha_start_time",Isha_time);
-            editor.putString("isha_iqama_time",Isha_time_iqama);
+            editor.putString("fajr_start_time", Fajr_time);
+            editor.putString("fajr_iqama_time", Fajr_time_iqama);
+            editor.putString("zuhr_start_time", Zuhr_time);
+            editor.putString("zuhr_iqama_time", Zuhr_time_iqama);
+            editor.putString("asr_start_time", Asr_time);
+            editor.putString("asr_iqama_time", Asr_time_iqama);
+            editor.putString("maghrib_start_time", Maghrib_time);
+            editor.putString("maghrib_iqama_time", Maghrib_time_iqama);
+            editor.putString("isha_start_time", Isha_time);
+            editor.putString("isha_iqama_time", Isha_time_iqama);
 
             // For the times
 
-            editor.putInt("hour",hour);
-            editor.putInt("minute",minute);
-            editor.putInt("second",second);
-            editor.putInt("Month",Month);
-            editor.putInt("Date",Date);
-            editor.putInt("Year",Year);
+            editor.putInt("hour", hour);
+            editor.putInt("minute", minute);
+            editor.putInt("second", second);
+            editor.putInt("Month", Month);
+            editor.putInt("Date", Date);
+            editor.putInt("Year", Year);
             editor.putInt("AmPm", AmPm);
+
+            // for user settings on font style and hadith source
+
+            editor.putString("saved_font_style",Font_style);
+            editor.putString("saved_hadith_source",Hadith_source);
 
             editor.apply();
 
 
-
-
-
-
             // Time to get hadiths
             TextView hadith = (TextView) findViewById(R.id.hadith_textview);
-            Typeface font = Typeface.createFromAsset(getAssets(), "DancingScript-Bold.ttf");
-            hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
-            hadith.setTypeface(font);
+
+//            Typeface font = Typeface.createFromAsset(getAssets(), "DancingScript-Bold.ttf");
+
+            if (Font_style.equals(Integer.toString(3))){//Integer.toString(0))){// Integer.toString(0)){
+                Typeface font = Typeface.createFromAsset(getAssets(), "DancingScript-Bold.ttf");
+                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
+                hadith.setTypeface(font);
+
+            }
+            else if (Font_style.equals(Integer.toString(4))){// == Integer.toString(1)){
+                Typeface font = Typeface.createFromAsset(getAssets(), "FlyBoyBB.ttf");
+                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
+                hadith.setTypeface(font);
+            }
+            else if (Font_style.equals(Integer.toString(1))){// == Integer.toString(1)){
+                Typeface font = Typeface.createFromAsset(getAssets(), "Admiration Pains.ttf");
+                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
+                hadith.setTypeface(font);
+            }
+            else if (Font_style.equals(Integer.toString(2))){// == Integer.toString(1)){
+                Typeface font = Typeface.createFromAsset(getAssets(), "always forever.ttf");
+                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
+                hadith.setTypeface(font);
+            }
+            else if (Font_style.equals(Integer.toString(5))){// == Integer.toString(1)){
+                Typeface font = Typeface.createFromAsset(getAssets(), "Milton_One.ttf");
+                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
+                hadith.setTypeface(font);
+            }
+
+
+
+
+//            hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
+//            hadith.setTypeface(font);
 
             System.out.println(hadith_title + hadith_text);
-
-
 
 
             mProgressDialog.dismiss();
@@ -568,26 +823,74 @@ public class MainActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
 
+//            AlarmManager alarmMgr;
+//            PendingIntent alarmIntent;
+//
+//
+//            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+////            Intent intent = new Intent(context, RegisterAlarmBroadcast);
+//            Intent intent = new Intent("broadcast_alarm");
+//
+//            alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+//
+//
+//            // get fajr alarm
+//            SharedPreferences salat_times = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+//            String Fajr_start_times = salat_times.getString("fajr_start_time", Fajr_time);
+//
+//
+//            Log.e("DEBUG_fajr_start", Fajr_start_times);
+//
+//            // take the hour
+//            int Fajr_Hour = Integer.parseInt(Character.toString(Fajr_start_times.charAt(0)));
+//            int Fajr_Minutes = Integer.parseInt(Character.toString(Fajr_start_times.charAt(2)));
+//            Fajr_Minutes = Fajr_Minutes * 10 + Integer.parseInt(Character.toString(Fajr_start_times.charAt(3)));
+//
+//            Log.e("DEBUG_fajr_Hour", Integer.toString(Fajr_Hour));
+//            Log.e("DEBUG_fajr_Minutes",Integer.toString(Fajr_Minutes));
+//
+//
+//
+//            int result = Fajr_Hour * 60 * 60 * 1000 + Fajr_Minutes * 60 * 1000;
+//
+//            Log.e("DEBUG_fajr_result",Integer.toString(result));
+//
+//
+//            alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, result, AlarmManager.INTERVAL_DAY, alarmIntent);
+//
+//
+//            Toast.makeText(context, "Fajr Alarm Set to " + Fajr_Hour + ":" + Fajr_Minutes, Toast.LENGTH_LONG).show();
 
-            // get fajr alarm
-            SharedPreferences salat_times = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-            String Fajr_start_times = salat_times.getString("fajr_start_time", Fajr_time);
-            // take the hour
-            int Fajr_Hour = Integer.parseInt(Character.toString(Fajr_start_times.charAt(0)));
-            int Fajr_Minutes = Integer.parseInt(Character.toString(Fajr_start_times.charAt(2)));
-            Fajr_Minutes = Fajr_Minutes*10 + Integer.parseInt(Character.toString(Fajr_start_times.charAt(3)));
 
-            //Fajr_Minutes = 57;
 
-            int result = Fajr_Hour*60*60*1000+ Fajr_Minutes*60*1000;
+//
+            String alarm = Context.ALARM_SERVICE;
+//            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            AlarmManager am = ( AlarmManager ) context.getSystemService(Context.ALARM_SERVICE);
 
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), result, pendingIntent);
-
-            Toast.makeText(context, "Fajr Alarm Set to " + Fajr_Hour + ":" +Fajr_Minutes, Toast.LENGTH_LONG).show();
+            Intent intent = //new Intent( "REFRESH_THIS" );
 
 
 
+            new Intent(context,AlarmActivitiy.class);
+            startActivity(intent);
 
+
+
+//            Intent intent = new Intent(context, AlarmActivitiy.class);
+
+
+//
+//
+//            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0 );
+//
+//            int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+////            long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+//            long interval = 1000;
+//            long triggerTime = SystemClock.elapsedRealtime() + interval;
+//
+//            am.setRepeating(type, triggerTime, interval, pi);
+//
 
 
 
@@ -614,13 +917,13 @@ public class MainActivity extends Activity {
                 calendar.set(Calendar.HOUR_OF_DAY, 8);
                 calendar.set(Calendar.MINUTE, 30);
                 */
-                // Connect to the web site
-                //Document document = Jsoup.connect(url).get();
-                // Using Elements to get the Meta data
-                // Elements description = document.select("meta[name=description]");
-                //Elements description = document.select("<tbody>");
-                // Locate the content attribute
-                //desc = description.attr("<td>");
+            // Connect to the web site
+            //Document document = Jsoup.connect(url).get();
+            // Using Elements to get the Meta data
+            // Elements description = document.select("meta[name=description]");
+            //Elements description = document.select("<tbody>");
+            // Locate the content attribute
+            //desc = description.attr("<td>");
 
 
             return null;
@@ -636,14 +939,11 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void RegisterAlarmBroadcast()
-    {
-        mReceiver = new BroadcastReceiver()
-        {
+    private void RegisterAlarmBroadcast() {
+        mReceiver = new BroadcastReceiver() {
             // private static final String TAG = "Alarm Example Receiver";
             @Override
-            public void onReceive(Context context, Intent intent)
-            {
+            public void onReceive(Context context, Intent intent) {
                 Toast.makeText(context, "Alarm time has been reached", Toast.LENGTH_LONG).show();
 
                 // start media player
@@ -663,8 +963,8 @@ public class MainActivity extends Activity {
         //pendingIntent = PendingIntent.getBroadcast( this, 0, intent,0 );
 
         registerReceiver(mReceiver, new IntentFilter("sample"));
-        pendingIntent = PendingIntent.getBroadcast( this, 0, new Intent("sample"),0 );
-        alarmManager =(AlarmManager)(this.getSystemService( Context.ALARM_SERVICE ));
+        pendingIntent = PendingIntent.getBroadcast(this, 0, new Intent("sample"), 0);
+        alarmManager = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
     }
 
     // Logo AsyncTask
@@ -684,7 +984,11 @@ public class MainActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
 
-            alarmManager.cancel(pendingIntent);
+
+            // alarmManager.cancel(pendingIntent);
+
+
+
             // Do not call this function...
             // getBaseContext().unregisterReceiver(mReceiver);
             mediaPlayer.pause();
@@ -722,4 +1026,56 @@ public class MainActivity extends Activity {
         }
     }
 
+
+    // saving preference stuff
+    private void showUserSettings(){
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("DEBUG", "showUserSettings");
+
+        StringBuilder builder = new StringBuilder();
+//
+//        builder.append("\n Username: "
+//                + sharedPrefs.getString("prefUsername", "NULL"));
+//
+//        builder.append("\n Send report:"
+//                + sharedPrefs.getBoolean("prefSendReport", false));
+//
+//        builder.append("\n Sync Frequency: "
+//                + sharedPrefs.getString("prefHadithSource", "NULL"));
+//
+        // Taking prefHadithSource value and saving it to global value
+        Log.d("DEBUG",sharedPrefs.getString("prefHadithSource", "NULL"));
+
+        // save font number in string format
+        Hadith_source = sharedPrefs.getString("prefHadithSource", "NULL");
+
+        // try to save it now
+        Context settings = getApplicationContext();
+        SaveInPreference(settings, "prefHadithSource", "NULL");
+
+
+
+//
+//        TextView settingsTextView = (TextView) findViewById(R.id.textUserSettings);
+//
+//        settingsTextView.setText(builder.toString());
+    }
+
+    private void chooseFontSource(){
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Font_style = sharedPrefs.getString("prefFontSource","NULL");
+
+
+        // also try to save font style
+        Context settings = getApplicationContext();
+        SaveInPreference(settings, "prefFontSource", "NULL");
+
+
+
+    }
+
+
 }
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="hadith_source">
+        <item name="bukhari">Sahih al-Bukhari صحيح البخاري</item>
+        <item name="muslim">Sahih Muslim صحيح مسلم</item>
+        <item name="nasa">Sunan an-Nasa \'iسنن النسائي</item>
+        <item name="dawud">Sunan Abi Dawud سنن أبي داود</item>
+        <item name="tirmidhi">Jami` at-Tirmidhi جامع الترمذي</item>
+        <item name="majah">Sunan Ibn Majah سنن ابن ماجه</item>
+        <item name="malik">Muwatta Malik موطأ مالك</item>
+        <item name="nawawi">Nawawi الأربعون النووي</item>
+        <item name="salihin">Riyad as-Salihin رياض الصالحين</item>
+        <item name="mufrad">Al-Adab Al-Mufrad الأدب المفرد</item>
+        <item name="qudsi">Qudsi الحديث القدسي</item>
+        <item name="muhammadiyah">Shama\'il Muhammadiyah الشمائل المحمدية</item>
+        <item name="maram">Bulugh al-Maram بلوغ المرام</item>
+
+        <!-- -->
+        <!--<item name="7">Once a week</item>-->
+        <!--<item name="3">Once a year</item>-->
+        <!--<item name="0">Never (Update maually)</item>-->
+
+    </string-array>
+
+
+    <string-array name="hadith_sourceValues">
+        <item name="bukhari">1</item>
+        <item name="muslim">2</item>
+        <item name="nasa">3</item>
+        <item name="dawud">4</item>
+        <item name="tirmidhi">5</item>
+        <item name="majah">6</item>
+        <item name="malik">7</item>
+        <item name="nawawi">8</item>
+        <item name="salihin">9</item>
+        <item name="mufrad">10</item>
+        <item name="qudsi">11</item>
+        <item name="muhammadiyah">12</item>
+        <item name="maram">13</item>
+
+
+        <!--<item name="1">1</item>-->
+        <!--<item name="7">7</item>-->
+        <!--<item name="30">30</item>-->
+        <!--<item name="0">0</item>-->
+    </string-array>
+
+    <string-array name="font_source">
+        <item name="Font 1">Admiration Pains</item>
+        <item name="Font 2">Always Forever</item>
+        <item name="Font 3">DancingScript-Bold</item>
+        <item name="Font 4">FlyBoyBB</item>
+        <item name="Font 5">Milton One</item>
+    </string-array>
+
+    <string-array name="font_sourceValues">
+        <item name="Font 1">1</item>
+        <item name="Font 2">2</item>
+        <item name="Font 3">3</item>
+        <item name="Font 4">4</item>
+        <item name="Font 5">5</item>
+    </string-array>
+
+</resources>

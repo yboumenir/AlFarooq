@@ -1,8 +1,49 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!-- Use this theme for sleek no Actionbar-->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+    <!-- Use this theme to have ActionBar-->
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
+        <!-- To change the size of the action bar-->
+
+        <!--<item name="android:actionBarSize">30dp</item>-->
+        <!--<item name="actionBarSize">30dp</item>-->
+
+    <!--<style name="AppTheme" parent="Theme.AppCompat.Light">-->
+
+    <!--<style name="Theme.Base" parent="android:Theme.Light" />-->
+
+    <!--<style name="Theme.Sample" parent="Theme.Base" />-->
+
+    <!--<style name="AppTheme" parent="Theme.Sample" />-->
+
+    <!-- Customize your theme here. -->
     </style>
+
+    <!-- Widget styling -->
+
+    <style name="Widget" />
+
+    <!--<style name="Widget.SampleMessage">-->
+        <!--<item name="android:textAppearance">?android:textAppearanceMedium</item>-->
+        <!--<item name="android:lineSpacingMultiplier">1.1</item>-->
+    <!--</style>-->
+
+    <style name="Widget.SampleMessageTile">
+        <item name="android:background">@drawable/tile</item>
+        <item name="android:shadowColor">#7F000000</item>
+        <item name="android:shadowDy">-3.5</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <!--<style name="AppTheme.ActionBar" parent="Widget.AppCompat.Light.ActionBar">-->
+        <!--&lt;!&ndash;<item name="android:actionBarSize">30dp</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="actionBarSize">30dp</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:titleTextStyle">@style/AppTheme.ActionBar.TitleText</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="titleTextStyle">@style/AppTheme.ActionBar.TitleText</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="android:height">5dp</item>&ndash;&gt;-->
+        <!--&lt;!&ndash;<item name="height">@dimen/bar_height</item>&ndash;&gt;-->
+    <!--</style>-->
 
 </resources>

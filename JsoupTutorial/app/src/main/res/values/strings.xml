@@ -8,4 +8,24 @@
     <string name="Description">Arm Fajr Alarm</string>
     <string name="Logo">Disarm Alarm</string>
 
+    <!-- menu variables -->
+
+    <string name="menu_refresh">Refresh</string>
+    <!--<string name="menu_location">Location</string>-->
+    <string name="menu_settings">Settings</string>
+
+
+    <!-- preferences-->
+
+    <string name="pref_send_report">Send crash reports</string>
+    <string name="pref_send_report_summary">Helps to fix bugs</string>
+    <string name="pref_hadith_source">Hadith Source</string>
+    <string name="pref_hadith_cites">From Sunnah.com</string>
+    <string name="pref_user_name">Set username</string>
+    <string name="pref_user_name_summary">Set your username</string>
+
+    <string name="pref_user_profile">User Profile</string>
+    <string name="pref_update_setting">Update App Settings</string>
+    <string name="title_activity_alarm_activitiy">AlarmActivitiy</string>
+
 </resources>
