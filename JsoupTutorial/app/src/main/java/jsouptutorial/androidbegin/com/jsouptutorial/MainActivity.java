@@ -3,6 +3,7 @@ package jsouptutorial.androidbegin.com.jsouptutorial;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.Random;
 
 import org.jsoup.Jsoup;
@@ -105,14 +106,12 @@ import jsouptutorial.androidbegin.com.jsouptutorial.AlarmActivitiy;
 import jsouptutorial.androidbegin.com.jsouptutorial.UserSettingActivity;
 import jsouptutorial.androidbegin.com.jsouptutorial.saved_hadiths;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickListener{
 
     // saving preference stuff
     private static final int RESULT_SETTINGS = 1;
 
-
     Context context;
-
 
     // URL Address
     String url = "http://alfarooqmasjid.org";
@@ -167,26 +166,11 @@ public class MainActivity extends Activity {
 
     String hadith_url = "http://sunnah.com/bukhari/"; // + String.valueOf(hadith_book_number);
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
-
-        View v = getWindow().getDecorView().getRootView();
-        PopupMenu popup = new PopupMenu(this, v);
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_settings:
-                        return true;
-                        default:
-                            return false;
-                }
-            }
-        });
-
 
 
         // Locate the Buttons in activity_main.xml
@@ -373,10 +357,48 @@ public class MainActivity extends Activity {
 
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_main, popup.getMenu());
         popup.show();
+
+
     }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+
+//            case R.id.menu_refresh:
+//
+//                // Here we might start a background refresh task
+//                return true;
+
+//            case R.id.menu_location:
+//                // Here we might call LocationManager.requestLocationUpdates()
+//                return true;
+
+            case R.id.menu_settings:
+                // To save user preferences
+                Intent i = new Intent(this, UserSettingActivity.class);
+                startActivityForResult(i, RESULT_SETTINGS);
+
+                Log.d("DEBUG", "onoptionsitemselected");
+                // Here we would open up our settings activity
+                return true;
+
+            case R.id.saved_hadiths:
+                // To save user preferences
+                Intent j = new Intent(this, saved_hadiths.class);
+                startActivityForResult(j, RESULT_SETTINGS);
+
+                Log.d("DEBUG", "onoptionsitemselected");
+                // Here we would open up our settings activity
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     /**
      * Use this method to instantiate your menu, and add your items to it. You
@@ -471,6 +493,12 @@ public class MainActivity extends Activity {
         SharedPreferences pref = mContext.getSharedPreferences(mContext.getString(R.string.app_name),
                 Context.MODE_PRIVATE);
         return pref.getString(key, defaultStr);
+    }
+
+    public static Map<String,?> dump_pref_strings(Context mContext) {
+        SharedPreferences pref = mContext.getSharedPreferences(mContext.getString(R.string.app_name),
+                Context.MODE_PRIVATE);
+        return pref.getAll();
     }
 
     // Title AsyncTask
