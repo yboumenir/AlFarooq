@@ -1,4 +1,4 @@
-package com.androidbegin.jsouptutorial;
+package jsouptutorial.androidbegin.com.jsouptutorial;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewDebug;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -98,6 +99,7 @@ import android.preference.PreferenceActivity;
 
 import jsouptutorial.androidbegin.com.jsouptutorial.AlarmActivitiy;
 import jsouptutorial.androidbegin.com.jsouptutorial.UserSettingActivity;
+import jsouptutorial.androidbegin.com.jsouptutorial.saved_hadiths;
 
 public class MainActivity extends Activity {
 
@@ -163,6 +165,7 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
 
@@ -377,6 +380,16 @@ public class MainActivity extends Activity {
                 Log.d("DEBUG","onoptionsitemselected");
                 // Here we would open up our settings activity
                 return true;
+
+            case R.id.saved_hadiths:
+                // To save user preferences
+                Intent j = new Intent(this, saved_hadiths.class);
+                startActivityForResult(j,RESULT_SETTINGS);
+
+                Log.d("DEBUG","onoptionsitemselected");
+                // Here we would open up our settings activity
+                return true;
+
         }
 
         return super.onOptionsItemSelected(item);

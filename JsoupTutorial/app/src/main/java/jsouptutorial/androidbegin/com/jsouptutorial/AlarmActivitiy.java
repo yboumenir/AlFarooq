@@ -13,8 +13,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.widget.Toast;
 
-import com.androidbegin.jsouptutorial.MainActivity;
-import com.androidbegin.jsouptutorial.R;
+import jsouptutorial.androidbegin.com.jsouptutorial.MainActivity;
+import jsouptutorial.androidbegin.com.jsouptutorial.R;
 
 public class AlarmActivitiy extends Activity {
 

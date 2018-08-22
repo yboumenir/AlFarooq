@@ -34,5 +34,11 @@
         android:title="@string/menu_settings"
         support:showAsAction="never"/>
 
+    <item
+        android:id="@+id/saved_hadiths"
+        android:icon="@drawable/ic_action_settings"
+        android:title="Saved Hadiths"
+        support:showAsAction="never"/>
+
 
 </menu>

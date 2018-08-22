@@ -3,7 +3,7 @@ package jsouptutorial.androidbegin.com.jsouptutorial;
 import  android.os.Bundle;
 import  android.preference.PreferenceActivity;
 
-import com.androidbegin.jsouptutorial.R;
+import jsouptutorial.androidbegin.com.jsouptutorial.R;
 
 /**
  * Created by yasser on 1/26/16.

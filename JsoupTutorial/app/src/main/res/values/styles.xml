@@ -4,7 +4,7 @@
     <!-- Use this theme for sleek no Actionbar-->
     <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
     <!-- Use this theme to have ActionBar-->
-    <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
+    <style name="AppTheme" parent="@android:style/Theme.Material">
         <!-- To change the size of the action bar-->
 
         <!--<item name="android:actionBarSize">30dp</item>-->

@@ -9,8 +9,8 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.androidbegin.jsouptutorial.MainActivity;
-import com.androidbegin.jsouptutorial.R;
+import jsouptutorial.androidbegin.com.jsouptutorial.MainActivity;
+import jsouptutorial.androidbegin.com.jsouptutorial.R;
 
 /**
  * Created by yasser on 1/31/16.

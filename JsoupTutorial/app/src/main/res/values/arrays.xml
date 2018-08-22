@@ -22,6 +22,12 @@
 
     </string-array>
 
+    <string-array name="saved_hadiths">
+        <item name="maram">Bulugh al-Maram بلوغ المرام</item>
+    </string-array>
+
+
+
 
     <string-array name="hadith_sourceValues">
         <item name="bukhari">1</item>

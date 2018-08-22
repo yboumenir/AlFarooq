@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.androidbegin.jsouptutorial"
+    package="jsouptutorial.androidbegin.com.jsouptutorial"
     android:versionCode="1"
     android:versionName="1.0">
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="15"
+        android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -27,7 +27,8 @@
         android:theme="@style/AppTheme">
 
         <!-- android:label="@string/app_name" -->
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme">
 
             <!-- android:label="@string/app_name"> -->
             <intent-filter>
@@ -43,6 +44,9 @@
         <!-- Need for preference file -->
         <activity android:name="jsouptutorial.androidbegin.com.jsouptutorial.UserSettingActivity" />
 
+        <!-- Need for preference file -->
+        <activity android:name="jsouptutorial.androidbegin.com.jsouptutorial.saved_hadiths" />
+
         <receiver
             android:name=".AlarmReceiver"
             android:process=":remote" />
@@ -57,7 +61,8 @@
 
         <activity
             android:name="jsouptutorial.androidbegin.com.jsouptutorial.AlarmActivitiy"
-            android:label="@string/title_activity_alarm_activitiy"></activity>
+            android:label="@string/title_activity_alarm_activitiy"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
