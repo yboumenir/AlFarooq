@@ -8,8 +8,10 @@ import java.util.Random;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -161,6 +163,8 @@ public class MainActivity extends Activity {
     // String for hadith source (default)
     String Hadith_source = Integer.toString(1);
 
+    String hadith_url = "http://sunnah.com/bukhari/"; // + String.valueOf(hadith_book_number);
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -174,6 +178,7 @@ public class MainActivity extends Activity {
         Button titlebutton = (Button) findViewById(R.id.titlebutton);
         Button descbutton = (Button) findViewById(R.id.descbutton);
         Button logobutton = (Button) findViewById(R.id.logobutton);
+        final Button save_hadith_button = (Button) findViewById(R.id.button_save_hadith);
 
         // Capture button click
         titlebutton.setOnClickListener(new OnClickListener() {
@@ -200,9 +205,28 @@ public class MainActivity extends Activity {
             }
         });
 
-        // Restore preferences
+        save_hadith_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s;
+                if (hadith_text == null){
+                    s="Oops no Hadith";
+                }
+                else{
+                    s ="Saving Hadith:\n" + hadith_title + "\n" + hadith_text;
+                    SaveInPreference(getApplicationContext(), hadith_url, hadith_text);
+                    SaveInPreference(getApplicationContext(), "last_saved_hadith_title", hadith_title);
+                    SaveInPreference(getApplicationContext(), "last_saved_hadith_text", hadith_text);
+                }
+                Toast.makeText(getApplicationContext(), s,Toast.LENGTH_LONG).show();
+            }
+        });
 
-        // Fonts for hadith
+        // Restore preferences
+        // upload last saved hadith
+        String old_hadith = getPrefString(getApplicationContext(), "last_saved_hadith_text","");
+        TextView t = (TextView) findViewById(R.id.hadith_textview);
+        t.setText(old_hadith);
 
 
         //SharedPreferences salat_times = getPreferences(0);
@@ -519,7 +543,7 @@ public class MainActivity extends Activity {
 //                Random hadith_book = new Random();
 //                int hadith_book_number = hadith_book.nextInt(97);
 
-                String hadith_url = "http://sunnah.com/bukhari/"; // + String.valueOf(hadith_book_number);
+//                String hadith_url = "http://sunnah.com/bukhari/"; // + String.valueOf(hadith_book_number);
 
 
                 // problem: when app is run before configuring setting, it will crash here
@@ -594,7 +618,7 @@ public class MainActivity extends Activity {
                 // now we regenerate url with new book volume number
 
                 debug_hadith_url = debug_hadith_url + Integer.toString(hadith_book_number);
-
+                hadith_url = debug_hadith_url;
                 // debug output
                 Log.e("DEBUG_url",debug_hadith_url);
 
