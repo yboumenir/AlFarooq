@@ -8,19 +8,35 @@
     android:layout_height="match_parent"
     >
 
-
     <TextView
         android:id="@+id/titletxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center" />
 
-    <Button
-        android:id="@+id/titlebutton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/titletxt"
-        android:text="@string/Title" />
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/titlebutton"
+            android:layout_width="315dp"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/titletxt"
+            android:layout_weight="1"
+            android:text="@string/Title" />
+
+        <ImageButton
+            android:id="@+id/menu_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:drawable/ic_menu_more"
+            android:onClick="showPopup" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="395dp"
@@ -59,82 +75,81 @@
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="200dp"
         android:layout_height="70dp"
-        android:layout_below="@+id/titlebutton"
-        android:id="@+id/frameLayout"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentStart="false"
-        android:layout_centerVertical="true">
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/titletxt"
+        android:layout_marginTop="100dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Starts"
-            android:textSize="18sp"
             android:id="@+id/textView2"
-            android:layout_gravity="center_horizontal|top" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Iqama"
-            android:textSize="18sp"
+            android:layout_gravity="center_horizontal|top"
+            android:text="Starts"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/textView3"
-            android:layout_gravity="right|top" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fajr"
-            android:textSize="18sp"
+            android:layout_gravity="right|top"
+            android:text="Iqama"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/Fajr_static"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:layout_marginTop="-5dp" />
+            android:layout_marginTop="-5dp"
+            android:text="Fajr"
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
             android:id="@+id/fajr_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="-5dp" />
+            android:layout_marginTop="-5dp"
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:id="@+id/fajr_iqama_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:layout_marginTop="-5dp" />
+            android:layout_marginTop="-5dp"
+            android:text=""
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thuhr"
-            android:textSize="18sp"
             android:id="@+id/Zurh_static"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|bottom"
-            android:layout_marginTop="-10dp" />
+            android:layout_marginTop="-10dp"
+            android:text="Thuhr"
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:id="@+id/zuhr_start_time"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginTop="-10dp" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginTop="-10dp"
             android:text=""
-            android:textSize="18sp"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/zuhr_iqama_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
-            android:layout_marginTop="-10dp" />
+            android:layout_marginTop="-10dp"
+            android:text=""
+            android:textSize="18sp" />
     </FrameLayout>
 
     <FrameLayout
@@ -244,29 +259,29 @@
         android:layout_toEndOf="@+id/Updated_static" />
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/scrollView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/frameLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="264dp"
         android:layout_above="@+id/descbutton"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp">
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/frameLayout2"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="15dp">
 
 
         <TextView
+            android:id="@+id/hadith_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:id="@+id/hadith_textview"
-            android:fontFamily=" "
-            android:layout_below="@+id/frameLayout2"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="15dp" />
+            android:layout_below="@+id/frameLayout2"
+            android:layout_marginTop="15dp"
+            android:fontFamily=" "
+            android:textSize="18sp" />
     </ScrollView>
 
     <ImageView
@@ -278,5 +293,6 @@
         android:layout_toEndOf="@+id/frameLayout"
         android:layout_alignTop="@+id/frameLayout"
         android:layout_marginTop="-50dp" />
+
 
 </RelativeLayout>

@@ -30,6 +30,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewDebug;
@@ -37,6 +38,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 
@@ -171,6 +173,19 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
+
+        View v = getWindow().getDecorView().getRootView();
+        PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_settings:
+                        return true;
+                        default:
+                            return false;
+                }
+            }
+        });
 
 
 
@@ -355,6 +370,14 @@ public class MainActivity extends Activity {
         // showUserSettings();
     }
 
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_main, popup.getMenu());
+        popup.show();
+    }
+
     /**
      * Use this method to instantiate your menu, and add your items to it. You
      * should return true if you have added items to it and want the menu to be displayed.
@@ -441,7 +464,7 @@ public class MainActivity extends Activity {
         SharedPreferences.Editor editor = mContext.getSharedPreferences(mContext.getString(R.string.app_name),
                 Context.MODE_PRIVATE).edit();
         editor.putString(key, objString);
-        editor.commit();
+        editor.apply();
     }
 
     public static String getPrefString(Context mContext, final String key, final String defaultStr) {

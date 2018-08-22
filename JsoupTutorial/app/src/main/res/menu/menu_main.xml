@@ -21,6 +21,8 @@
         <!--android:title="@string/menu_refresh"-->
         <!--support:showAsAction="never"/>-->
 
+
+
     <!-- Location item is added in onCreateOptionsMenu() -->
 
     <!--
