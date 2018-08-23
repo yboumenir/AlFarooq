@@ -316,8 +316,8 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         TextView current_time = (TextView) findViewById(R.id.salat_time_updated);
         current_time.setText(Current_time);
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
-        RegisterAlarmBroadcast();
+//        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
+//        RegisterAlarmBroadcast();
 
         //alarm.SetAlarm(this);
 
@@ -356,6 +356,12 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
 
     public void showPopup(View v) {
+        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
+        mediaPlayer.seekTo(0);
+        mediaPlayer.start();
+        RegisterAlarmBroadcast();
+
+
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
@@ -900,17 +906,19 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgressDialog = new ProgressDialog(MainActivity.this);
-            mProgressDialog.setTitle("Arming Alarm!");
-            mProgressDialog.setMessage("Loading...");
-            mProgressDialog.setIndeterminate(false);
+            Toast.makeText(getApplicationContext(), "Arming Alarm", Toast.LENGTH_LONG).show();
 
-            mProgressDialog.show();
+//            mProgressDialog = new ProgressDialog(MainActivity.this);
+//            mProgressDialog.setTitle("Arming Alarm!");
+//            mProgressDialog.setMessage("Loading...");
+//            mProgressDialog.setIndeterminate(false);
+//
+//            mProgressDialog.show();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
+//            Toast.makeText(getApplicationContext(), "Arming Alarm in background", Toast.LENGTH_LONG).show();
 //            AlarmManager alarmMgr;
 //            PendingIntent alarmIntent;
 //
@@ -954,13 +962,12 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 //
             String alarm = Context.ALARM_SERVICE;
 //            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            AlarmManager am = ( AlarmManager ) context.getSystemService(Context.ALARM_SERVICE);
-
-            Intent intent = //new Intent( "REFRESH_THIS" );
-
+            AlarmManager am = ( AlarmManager ) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+//            Intent intent = new Intent( "REFRESH_THIS" );
 
 
-            new Intent(context,AlarmActivitiy.class);
+
+            Intent intent = new Intent(getApplicationContext(),AlarmActivitiy.class);
             startActivity(intent);
 
 
@@ -1023,7 +1030,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
             //TextView txtdesc = (TextView) findViewById(R.id.desctxt);
             //txtdesc.setText(desc);
 
-            mProgressDialog.dismiss();
+//            mProgressDialog.dismiss();
         }
     }
 
@@ -1062,16 +1069,17 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgressDialog = new ProgressDialog(MainActivity.this);
-            mProgressDialog.setTitle("Disarming Alarm");
-            mProgressDialog.setMessage("Loading...");
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.show();
+            Toast.makeText(context, "Arming Alarm", Toast.LENGTH_LONG).show();
+//            mProgressDialog = new ProgressDialog(MainActivity.this);
+//            mProgressDialog.setTitle("Disarming Alarm");
+//            mProgressDialog.setMessage("Loading...");
+//            mProgressDialog.setIndeterminate(false);
+//            mProgressDialog.show();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            Toast.makeText(context, "Arming Alarm in background", Toast.LENGTH_LONG).show();
 
             // alarmManager.cancel(pendingIntent);
 
