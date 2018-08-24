@@ -8,57 +8,62 @@
     android:layout_height="match_parent"
     >
 
-    <TextView
-        android:id="@+id/titletxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center" />
-
     <LinearLayout
+        android:id="@+id/top_linear_holder"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/titletxt"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/titlebutton"
-            android:layout_width="315dp"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/titletxt"
-            android:layout_weight="1"
-            android:text="@string/Title" />
+        <TextView
+            android:id="@+id/titletxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"/>
 
-        <ImageButton
-            android:id="@+id/menu_image"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:drawable/ic_menu_more"
-            android:onClick="showPopup" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/titlebutton"
+                android:layout_width="315dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/Title" />
+
+            <ImageButton
+                android:id="@+id/menu_image"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:drawable/ic_menu_more"
+                android:onClick="showPopup" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="200dp"
         android:layout_height="70dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/titletxt"
-        android:layout_marginTop="100dp">
+        android:layout_below="@id/top_linear_holder">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/text_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|top"
+            android:layout_weight="1"
             android:text="Starts"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/text_iqama_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|top"
+            android:layout_weight="1"
             android:text="Iqama"
             android:textSize="18sp" />
 
@@ -117,182 +122,172 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/frameLayout2"
         android:layout_width="200dp"
         android:layout_height="70dp"
-        android:id="@+id/frameLayout2"
-        android:layout_below="@+id/frameLayout"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="0dp"
-        android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/frameLayout"
-        android:layout_alignEnd="@+id/frameLayout">
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignStart="@+id/top_linear_holder">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Asr"
-            android:textSize="18sp"
             android:id="@+id/Asr_static"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|top"
-            android:layout_marginTop="-0dp" />
+            android:layout_marginTop="-0dp"
+            android:text="Asr"
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:id="@+id/asr_start_time"
-            android:layout_gravity="center_horizontal|top" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
             android:text=""
-            android:textSize="18sp"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/asr_iqama_time"
-            android:layout_gravity="right|top" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Maghrib"
-            android:textSize="18sp"
+            android:layout_gravity="right|top"
+            android:text=""
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/Maghrib_static"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
-            android:layout_marginTop="-0dp" />
+            android:layout_marginTop="-0dp"
+            android:text="Maghrib"
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:id="@+id/maghrib_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="-0dp" />
+            android:layout_marginTop="-0dp"
+            android:text=""
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:id="@+id/maghrib_iqama_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
-            android:layout_marginTop="0dp" />
+            android:layout_marginTop="0dp"
+            android:text=""
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Isha"
-            android:textSize="18sp"
             android:id="@+id/Isha_static"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|bottom"
-            android:layout_marginTop="0dp" />
+            android:layout_marginTop="0dp"
+            android:text="Isha"
+            android:textSize="18sp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="18sp"
             android:id="@+id/isha_start_time"
-            android:layout_gravity="center_horizontal|bottom" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
             android:text=""
-            android:textSize="18sp"
+            android:textSize="18sp" />
+
+        <TextView
             android:id="@+id/isha_iqama_time"
-            android:layout_gravity="right|bottom" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:text=""
+            android:textSize="18sp" />
 
     </FrameLayout>
 
     <TextView
+        android:id="@+id/Updated_static"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Updated on : "
-        android:id="@+id/Updated_static"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <TextView
+        android:id="@+id/salat_time_updated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/salat_time_updated"
         android:layout_toRightOf="@+id/Updated_static"
         android:layout_toEndOf="@+id/Updated_static" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_height="193dp"
+        android:layout_height="142dp"
         android:layout_alignTop="@+id/frameLayout"
-        android:layout_marginTop="-50dp"
+        android:layout_marginTop="1dp"
         android:layout_toEndOf="@+id/frameLayout"
         android:layout_toRightOf="@+id/frameLayout"
         android:src="@drawable/compass" />
 
     <LinearLayout
+        android:id="@+id/last_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:orientation="vertical">
+        android:layout_below="@+id/frameLayout2"
+        android:layout_above="@id/button_pack"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true">
+            android:layout_height="match_parent">
 
 
             <TextView
                 android:id="@+id/hadith_textview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_below="@+id/frameLayout2"
+                android:layout_height="match_parent"
                 android:textSize="18sp" />
+
         </ScrollView>
 
-        <LinearLayout
-            android:id="@+id/button_pack"
-            android:layout_width="match_parent"
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_pack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/descbutton"
+            android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/scrollView"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:orientation="horizontal">
+            android:layout_above="@+id/logobutton"
+            android:layout_weight="1"
+            android:text="@string/Description" />
 
-            <Button
-                android:id="@+id/descbutton"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/logobutton"
-                android:layout_alignParentStart="true"
-                android:layout_weight="1"
-                android:text="@string/Description" />
+        <Button
+            android:id="@+id/button_save_hadith"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Save Hadith" />
 
-            <Button
-                android:id="@+id/button_save_hadith"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_weight="1"
-                android:text="Save Hadith" />
+        <Button
+            android:id="@+id/logobutton"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/Logo" />
 
-            <Button
-                android:id="@+id/logobutton"
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_weight="1"
-                android:text="@string/Logo" />
-
-        </LinearLayout>
     </LinearLayout>
 
 

@@ -126,13 +126,11 @@
     <orderEntry type="library" name="Gradle: com.android.support:animated-vector-drawable-25.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-compat-25.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-v4-25.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-1.1.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support:support-core-ui-25.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-media-compat-25.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-vector-drawable-25.4.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.android.support:support-core-ui-25.4.0" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-annotations:25.4.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.android.support:support-core-utils-25.4.0" level="project" />
-    <orderEntry type="library" name="Gradle: com.android.support.constraint:constraint-layout-solver:1.1.2@jar" level="project" />
     <orderEntry type="module" module-name="jsoup-1.8.2" />
   </component>
 </module>
