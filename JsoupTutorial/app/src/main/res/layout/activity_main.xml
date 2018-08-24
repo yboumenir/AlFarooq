@@ -38,42 +38,6 @@
             android:onClick="showPopup" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="395dp"
-        android:layout_height="51dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="0dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_save_hadith"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Save Hadith" />
-
-        <Button
-            android:id="@+id/descbutton"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/logobutton"
-            android:layout_alignParentStart="true"
-            android:layout_weight="1"
-            android:text="@string/Description" />
-
-        <Button
-            android:id="@+id/logobutton"
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_weight="1"
-            android:text="@string/Logo" />
-
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="200dp"
@@ -258,41 +222,78 @@
         android:layout_toRightOf="@+id/Updated_static"
         android:layout_toEndOf="@+id/Updated_static" />
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="wrap_content"
-        android:layout_height="264dp"
-        android:layout_above="@+id/descbutton"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/frameLayout2"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="15dp">
-
-
-        <TextView
-            android:id="@+id/hadith_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/frameLayout2"
-            android:layout_marginTop="15dp"
-            android:fontFamily=" "
-            android:textSize="18sp" />
-    </ScrollView>
-
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/compass"
         android:id="@+id/imageView"
-        android:layout_toRightOf="@+id/frameLayout"
-        android:layout_toEndOf="@+id/frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="193dp"
         android:layout_alignTop="@+id/frameLayout"
-        android:layout_marginTop="-50dp" />
+        android:layout_marginTop="-50dp"
+        android:layout_toEndOf="@+id/frameLayout"
+        android:layout_toRightOf="@+id/frameLayout"
+        android:src="@drawable/compass" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true">
+
+
+            <TextView
+                android:id="@+id/hadith_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_below="@+id/frameLayout2"
+                android:textSize="18sp" />
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/button_pack"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/scrollView"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/descbutton"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/logobutton"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:text="@string/Description" />
+
+            <Button
+                android:id="@+id/button_save_hadith"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:text="Save Hadith" />
+
+            <Button
+                android:id="@+id/logobutton"
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:text="@string/Logo" />
+
+        </LinearLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>
