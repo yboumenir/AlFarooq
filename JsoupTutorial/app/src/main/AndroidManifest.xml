@@ -9,10 +9,10 @@
         android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-
-    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!--
  for alarm
     <uses-permission android:name="android.permission.wake_lock"></uses-permission>
@@ -47,22 +47,21 @@
         <!-- Need for preference file -->
         <activity android:name="jsouptutorial.androidbegin.com.jsouptutorial.saved_hadiths" />
 
-        <receiver
-            android:name=".AlarmReceiver"
-            android:process=":remote" />
 
-
+        <!-- Will not be called unless the application explicitly enables it -->
         <receiver android:name=".MyReceiver">
             <intent-filter>
                 <action android:name="REFRESH_THIS" />
-
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
         <activity
             android:name="jsouptutorial.androidbegin.com.jsouptutorial.AlarmActivitiy"
             android:label="@string/title_activity_alarm_activitiy"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme">
+        </activity>
+
     </application>
 
 </manifest>

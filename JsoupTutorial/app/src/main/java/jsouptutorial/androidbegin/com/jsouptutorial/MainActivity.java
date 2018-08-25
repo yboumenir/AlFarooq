@@ -1,7 +1,6 @@
 package jsouptutorial.androidbegin.com.jsouptutorial;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Random;
@@ -9,16 +8,13 @@ import java.util.Random;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Text;
 
 import android.app.AlarmManager;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.RadialGradient;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -26,92 +22,40 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewDebug;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 
 // to save using sharedprefreferences
-import android.content.SharedPreferences;
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.PowerManager;
 import android.widget.Toast;
 
 // from Alarm class
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
 
 
 // media player
 
-import android.media.MediaPlayer;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-
 // http://viralpatel.net/blogs/android-preferences-activity-example/
 //  saving user preference stuff
 
-import android.preference.PreferenceActivity;
-
-import jsouptutorial.androidbegin.com.jsouptutorial.AlarmActivitiy;
-import jsouptutorial.androidbegin.com.jsouptutorial.UserSettingActivity;
-import jsouptutorial.androidbegin.com.jsouptutorial.saved_hadiths;
 
 public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickListener{
 
     // saving preference stuff
     private static final int RESULT_SETTINGS = 1;
 
-    Context context;
+    public static Context context;
 
     // URL Address
     String url = "http://alfarooqmasjid.org";
@@ -153,9 +97,9 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
     MediaPlayer mediaPlayer;
 
 
-    PendingIntent pendingIntent;
-    AlarmManager alarmManager;
-    BroadcastReceiver mReceiver;
+    private PendingIntent pendingIntent;
+    private AlarmManager alarmManager;
+    private BroadcastReceiver mReceiver;
 
 
     // String for font style (default)
@@ -172,11 +116,16 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        context = getApplicationContext();
+
+        // start receiver intent
+        Intent alarm_intent = new Intent(MainActivity.this, MyReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarm_intent, 0);
 
         // Locate the Buttons in activity_main.xml
         Button titlebutton = (Button) findViewById(R.id.titlebutton);
-        Button descbutton = (Button) findViewById(R.id.descbutton);
-        Button logobutton = (Button) findViewById(R.id.logobutton);
+        Button start_fajr_alarm_button = (Button) findViewById(R.id.start_fajr_alarm_button);
+        Button stop_fajr_alarm_button = (Button) findViewById(R.id.stop_fajr_alarm_button);
         final Button save_hadith_button = (Button) findViewById(R.id.button_save_hadith);
 
         // Capture button click
@@ -188,19 +137,22 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         });
 
         // Set fajr alarm
-        descbutton.setOnClickListener(new OnClickListener() {
+        start_fajr_alarm_button.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
-                // Execute Description AsyncTask
-
-                new Description().execute();
+                // Execute start_fajr_alarm_async_task AsyncTask
+                final AsyncTask task = new start_fajr_alarm_async_task(context);
+                task.execute();
+//                new start_fajr_alarm_async_task().execute();
+//                Context c = context;
+//                start_alarm(c);
             }
         });
 
         // Capture button click
-        logobutton.setOnClickListener(new OnClickListener() {
+        stop_fajr_alarm_button.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
-                // Execute Logo AsyncTask
-                new Logo().execute();
+                // Execute stop_fajr_alarm_async_task AsyncTask
+                new stop_fajr_alarm_async_task().execute();
             }
         });
 
@@ -356,10 +308,10 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
 
     public void showPopup(View v) {
-        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
-        mediaPlayer.seekTo(0);
-        mediaPlayer.start();
-        RegisterAlarmBroadcast();
+//        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
+//        mediaPlayer.seekTo(0);
+//        mediaPlayer.start();
+//        RegisterAlarmBroadcast();
 
 
         PopupMenu popup = new PopupMenu(this, v);
@@ -368,6 +320,23 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         inflater.inflate(R.menu.menu_main, popup.getMenu());
         popup.show();
 
+    }
+
+
+    public void start_alarm(Context context) {
+//        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
+//        mediaPlayer.seekTo(0);
+//        mediaPlayer.start();
+//        RegisterAlarmBroadcast();
+//        String alarm = context.ALARM_SERVICE;
+//            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+//        AlarmManager am = ( AlarmManager ) context.getSystemService(context.ALARM_SERVICE);
+//            Intent intent = new Intent( "REFRESH_THIS" );
+
+
+
+        Intent intent = new Intent(context, AlarmActivitiy.class);
+        startActivity(intent);
 
     }
 
@@ -900,8 +869,13 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         }
     }
 
-    // Description AsyncTask
-    private class Description extends AsyncTask<Void, Void, Void> {
+    // start_fajr_alarm_async_task AsyncTask
+    public class start_fajr_alarm_async_task extends AsyncTask<Void, Void, Void> {
+        private final Context mcontext;
+
+        public  start_fajr_alarm_async_task(Context context){
+            mcontext = context;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -960,16 +934,16 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
 
 //
-            String alarm = Context.ALARM_SERVICE;
+            String alarm = mcontext.ALARM_SERVICE;
 //            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            AlarmManager am = ( AlarmManager ) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+            AlarmManager am = ( AlarmManager ) mcontext.getSystemService(mcontext.ALARM_SERVICE);
 //            Intent intent = new Intent( "REFRESH_THIS" );
-
-
-
-            Intent intent = new Intent(getApplicationContext(),AlarmActivitiy.class);
+//
+//
+//
+            Intent intent = new Intent(mcontext,AlarmActivitiy.class);
             startActivity(intent);
-
+//
 
 
 //            Intent intent = new Intent(context, AlarmActivitiy.class);
@@ -1062,8 +1036,8 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         alarmManager = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
     }
 
-    // Logo AsyncTask
-    private class Logo extends AsyncTask<Void, Void, Void> {
+    // stop_fajr_alarm_async_task AsyncTask
+    private class stop_fajr_alarm_async_task extends AsyncTask<Void, Void, Void> {
         Bitmap bitmap;
 
         @Override

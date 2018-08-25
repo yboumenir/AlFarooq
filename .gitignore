@@ -1,5 +1,8 @@
 build/*
 .idea/*
+/JsoupTutorial/app/build/*
+/JsoupTutorial/app/release/*
+/JsoupTutorial/.idea/*
 /JsoupTutorial/.gradle/4.4/fileChanges/last-build.bin
 /JsoupTutorial/.gradle/4.4/fileContent/fileContent.lock
 /JsoupTutorial/.gradle/4.4/fileHashes/fileHashes.bin
