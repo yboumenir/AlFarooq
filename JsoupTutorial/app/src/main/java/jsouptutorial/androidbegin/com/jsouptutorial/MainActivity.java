@@ -119,8 +119,10 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         context = getApplicationContext();
 
         // start receiver intent
-        Intent alarm_intent = new Intent(MainActivity.this, MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarm_intent, 0);
+        Intent alarm_intent = new Intent(this, MyReceiver.class);
+        alarm_intent.putExtra("a", alarm_intent.clone());
+
+        pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, alarm_intent, 0);
 
         // Locate the Buttons in activity_main.xml
         Button titlebutton = (Button) findViewById(R.id.titlebutton);
@@ -139,20 +141,17 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         // Set fajr alarm
         start_fajr_alarm_button.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
-                // Execute start_fajr_alarm_async_task AsyncTask
-                final AsyncTask task = new start_fajr_alarm_async_task(context);
-                task.execute();
+                Toast.makeText(getApplicationContext(), "Setting alarm 30 minutes after Fajr",Toast.LENGTH_LONG).show();
 //                new start_fajr_alarm_async_task().execute();
 //                Context c = context;
-//                start_alarm(c);
+                start_alarm();
             }
         });
 
-        // Capture button click
+        // stop fajr alarm
         stop_fajr_alarm_button.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
-                // Execute stop_fajr_alarm_async_task AsyncTask
-                new stop_fajr_alarm_async_task().execute();
+                stop_alarm();
             }
         });
 
@@ -323,7 +322,14 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
     }
 
 
-    public void start_alarm(Context context) {
+    public void start_alarm() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 1000;
+        Calendar cal = Calendar.getInstance();
+
+        Log.d("DEBUG", Fajr_time);
+        cal.add(Calendar.SECOND, 2);
+        manager.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(), 1000, pendingIntent);
 //        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
 //        mediaPlayer.seekTo(0);
 //        mediaPlayer.start();
@@ -333,12 +339,16 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 //        AlarmManager am = ( AlarmManager ) context.getSystemService(context.ALARM_SERVICE);
 //            Intent intent = new Intent( "REFRESH_THIS" );
 
-
-
-        Intent intent = new Intent(context, AlarmActivitiy.class);
-        startActivity(intent);
-
     }
+
+    public void stop_alarm() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);
+
+        Toast.makeText(this, "You better have gotten up \uD83D\uDE20 ", Toast.LENGTH_SHORT).show();
+    }
+
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
