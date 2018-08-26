@@ -1,6 +1,7 @@
 package jsouptutorial.androidbegin.com.jsouptutorial;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Random;
@@ -44,10 +45,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-// media player
 
-// http://viralpatel.net/blogs/android-preferences-activity-example/
-//  saving user preference stuff
+
 
 
 public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickListener{
@@ -94,13 +93,14 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
     // for alarm
 
     //Media player for alarm
+//    MediaPlayer mediaPlayer =  MediaPlayer.create(context,R.raw.adhan);
+//    MediaPlayer mediaPlayer =  new MediaPlayer();
+
     MediaPlayer mediaPlayer;
 
-
     private PendingIntent pendingIntent;
-    private AlarmManager alarmManager;
     private BroadcastReceiver mReceiver;
-
+    Intent alarm_intent;
 
     // String for font style (default)
     String Font_style = "3";
@@ -118,10 +118,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
         context = getApplicationContext();
 
-        // start receiver intent
-        Intent alarm_intent = new Intent(this, MyReceiver.class);
-        alarm_intent.putExtra("a", alarm_intent.clone());
-
+        alarm_intent = new Intent(this, MyReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, alarm_intent, 0);
 
         // Locate the Buttons in activity_main.xml
@@ -142,8 +139,6 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         start_fajr_alarm_button.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
                 Toast.makeText(getApplicationContext(), "Setting alarm 30 minutes after Fajr",Toast.LENGTH_LONG).show();
-//                new start_fajr_alarm_async_task().execute();
-//                Context c = context;
                 start_alarm();
             }
         });
@@ -152,6 +147,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         stop_fajr_alarm_button.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
                 stop_alarm();
+
             }
         });
 
@@ -327,23 +323,20 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         int interval = 1000;
         Calendar cal = Calendar.getInstance();
 
-        Log.d("DEBUG", Fajr_time);
+//        Log.d("DEBUG", Fajr_time);
         cal.add(Calendar.SECOND, 2);
         manager.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(), 1000, pendingIntent);
-//        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
-//        mediaPlayer.seekTo(0);
-//        mediaPlayer.start();
-//        RegisterAlarmBroadcast();
-//        String alarm = context.ALARM_SERVICE;
-//            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-//        AlarmManager am = ( AlarmManager ) context.getSystemService(context.ALARM_SERVICE);
-//            Intent intent = new Intent( "REFRESH_THIS" );
-
     }
 
     public void stop_alarm() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         manager.cancel(pendingIntent);
+
+
+        Toast.makeText(this, "stopping athan.", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, DismissBroadcast.class);
+        getApplicationContext().sendBroadcast(intent);
 
         Toast.makeText(this, "You better have gotten up \uD83D\uDE20 ", Toast.LENGTH_SHORT).show();
     }
@@ -1016,34 +1009,6 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
 //            mProgressDialog.dismiss();
         }
-    }
-
-    private void RegisterAlarmBroadcast() {
-        mReceiver = new BroadcastReceiver() {
-            // private static final String TAG = "Alarm Example Receiver";
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Toast.makeText(context, "Alarm time has been reached", Toast.LENGTH_LONG).show();
-
-                // start media player
-                mediaPlayer.seekTo(0);
-                mediaPlayer.start();
-
-
-            }
-        };
-
-
-        // intent = new Intent(getBaseContext(),MainActivity.class);
-        //pendingIntent = PendingIntent.getBroadcast( this, 0, intent,0 );
-
-        //Intent intent = new Intent();
-        //registerReceiver(mReceiver, new IntentFilter("intent"));
-        //pendingIntent = PendingIntent.getBroadcast( this, 0, intent,0 );
-
-        registerReceiver(mReceiver, new IntentFilter("sample"));
-        pendingIntent = PendingIntent.getBroadcast(this, 0, new Intent("sample"), 0);
-        alarmManager = (AlarmManager) (this.getSystemService(Context.ALARM_SERVICE));
     }
 
     // stop_fajr_alarm_async_task AsyncTask

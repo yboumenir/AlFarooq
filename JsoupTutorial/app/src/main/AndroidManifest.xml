@@ -50,8 +50,18 @@
         <activity android:name="jsouptutorial.androidbegin.com.jsouptutorial.saved_hadiths" />
 
 
+
         <!-- Will not be called unless the application explicitly enables it -->
-        <receiver android:name=".MyReceiver">
+        <receiver android:name="jsouptutorial.androidbegin.com.jsouptutorial.DismissBroadcast">
+            <intent-filter>
+                <action android:name="REFRESH_THIS"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+
+        <!-- Will not be called unless the application explicitly enables it -->
+        <receiver android:name="jsouptutorial.androidbegin.com.jsouptutorial.MyReceiver">
             <intent-filter>
                 <action android:name="REFRESH_THIS" />
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

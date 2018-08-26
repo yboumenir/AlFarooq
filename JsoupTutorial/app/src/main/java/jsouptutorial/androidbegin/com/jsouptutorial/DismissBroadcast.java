@@ -16,18 +16,15 @@ import java.io.Serializable;
 import jsouptutorial.androidbegin.com.jsouptutorial.MainActivity;
 import jsouptutorial.androidbegin.com.jsouptutorial.R;
 
-
-/**
- * Created by yasser on 1/31/16.
- */
-//public class MyReceiver extends BroadcastReceiver {
-public class MyReceiver extends BroadcastReceiver{
+public class DismissBroadcast extends BroadcastReceiver {
+    private Context context;
+    private Intent intent;
 
     @Override
-    public void onReceive( Context context, Intent intent ) {
-        MusicControl.getInstance(context).playMusic();
-        Toast.makeText(context, "Athan set ", Toast.LENGTH_LONG).show();
+    public void onReceive(Context context, Intent intent) {
+        this.context = context;
+        this.intent = intent;
+        MusicControl.getInstance(context).stopMusic();
+        // do your code here...
     }
 }
-
-
