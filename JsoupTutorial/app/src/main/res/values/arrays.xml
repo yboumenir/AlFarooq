@@ -52,6 +52,7 @@
     </string-array>
 
     <string-array name="font_source">
+        <item name="Font 0">System</item>
         <item name="Font 1">Admiration Pains</item>
         <item name="Font 2">Always Forever</item>
         <item name="Font 3">DancingScript-Bold</item>
@@ -60,6 +61,7 @@
     </string-array>
 
     <string-array name="font_sourceValues">
+        <item name="Font 0">0</item>
         <item name="Font 1">1</item>
         <item name="Font 2">2</item>
         <item name="Font 3">3</item>

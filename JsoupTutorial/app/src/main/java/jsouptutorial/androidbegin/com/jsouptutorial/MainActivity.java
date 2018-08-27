@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -53,62 +54,16 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
     // saving preference stuff
     private static final int RESULT_SETTINGS = 1;
-
     public static Context context;
 
-    // URL Address
-    String url = "http://alfarooqmasjid.org";
-    ProgressDialog mProgressDialog;
-
-
-    // to save the salat times data
-    public static final String PREFS_NAME = "MyPrefsFile";
-
-    // Global variables to save the times
-    String Fajr_time;
-    String Zuhr_time;
-    String Asr_time;
-    String Maghrib_time;
-    String Isha_time;
-
-    String Fajr_time_iqama;
-    String Zuhr_time_iqama;
-    String Asr_time_iqama;
-    String Maghrib_time_iqama;
-    String Isha_time_iqama;
-
-    String hadith_title;
-    String hadith_text;
-
-    // For the current time
-    int hour;
-    int minute;
-    int second;
-    int Month;
-    int Date;
-    int Year;
-    int AmPm;
-
-
-    // for alarm
-
-    //Media player for alarm
-//    MediaPlayer mediaPlayer =  MediaPlayer.create(context,R.raw.adhan);
-//    MediaPlayer mediaPlayer =  new MediaPlayer();
-
-    MediaPlayer mediaPlayer;
 
     private PendingIntent pendingIntent;
-    private BroadcastReceiver mReceiver;
+    private GrabSalatTimes salat_times;
     Intent alarm_intent;
 
     // String for font style (default)
-    String Font_style = "3";
+    String Font_style = "NULL";
 
-    // String for hadith source (default)
-    String Hadith_source = Integer.toString(1);
-
-    String hadith_url = "http://sunnah.com/bukhari/"; // + String.valueOf(hadith_book_number);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,6 +72,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         setContentView(R.layout.activity_main);
 
         context = getApplicationContext();
+        salat_times = new GrabSalatTimes(context);
 
         alarm_intent = new Intent(this, MyReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, alarm_intent, 0);
@@ -131,7 +87,12 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         titlebutton.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
                 // Execute Title AsyncTask
-                new Title().execute();
+//                new Title().execute();
+                SalatTimes latest_salat_times = salat_times.get_salat_times();
+                update_salat_times_view(latest_salat_times);
+
+                Hadith hadith = salat_times.get_hadith();
+                update_latest_hadith(hadith);
             }
         });
 
@@ -155,14 +116,15 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
             @Override
             public void onClick(View view) {
                 String s;
-                if (hadith_text == null){
+                Hadith hadith = salat_times.get_hadith();
+                if (hadith.hadith_text == ""){
                     s="Oops no Hadith";
                 }
                 else{
-                    s ="Saving Hadith:\n" + hadith_title + "\n" + hadith_text;
-                    SaveInPreference(getApplicationContext(), hadith_url, hadith_text);
-                    SaveInPreference(getApplicationContext(), "last_saved_hadith_title", hadith_title);
-                    SaveInPreference(getApplicationContext(), "last_saved_hadith_text", hadith_text);
+                    s ="Saving Hadith:\n" + hadith.hadith_title + "\n" + hadith.hadith_text;
+                    SaveInPreference(getApplicationContext(), hadith.hadith_url, hadith.hadith_text);
+                    SaveInPreference(getApplicationContext(), "last_saved_hadith_title", hadith.hadith_title);
+                    SaveInPreference(getApplicationContext(), "last_saved_hadith_text", hadith.hadith_text);
                 }
                 Toast.makeText(getApplicationContext(), s,Toast.LENGTH_LONG).show();
             }
@@ -175,140 +137,116 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         t.setText(old_hadith);
 
 
-        //SharedPreferences salat_times = getPreferences(0);
-        // String Fajr_times = salat_times.getString("fajr_start_time", fajr);
+        final SalatTimes latest_salat_times = salat_times.get_salat_times();
 
-        // to save a value
-        //SharedPreferences fajr_time_save = getPreferences(0);
-        //SharedPreferences.Editor fajr_editor = fajr_time_save.edit().putString("fajr_start_time","1");
+        new CountDownTimer(5000, 1000) {
 
+            public void onTick(long millisUntilFinished) {
+                String time = "Updating : " + Long.toString(millisUntilFinished);
+                Toast.makeText(getApplicationContext(), time,Toast.LENGTH_LONG).show();
+                if (latest_salat_times.is_stale()){
+                    this.cancel();
+                }
+            }
 
-        SharedPreferences salat_times = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-       /*
-        SharedPreferences.Editor editor = salat_times.edit();
-        editor.putString("fajr_start_time","5");
-        editor.apply();
-*/
+            public void onFinish() {
+                Toast.makeText(getApplicationContext(), "done",Toast.LENGTH_LONG).show();
+                update_salat_times_view(latest_salat_times);
+            }
+        }.start();
 
-        String Fajr_start_times = salat_times.getString("fajr_start_time", Fajr_time);
-        String Fajr_iqama_times = salat_times.getString("fajr_iqama_time", Fajr_time_iqama);
-
-        String Zuhr_start_times = salat_times.getString("zuhr_start_time", Fajr_time);
-        String Zuhr_iqama_times = salat_times.getString("zuhr_iqama_time", Fajr_time_iqama);
-
-        String Asr_start_times = salat_times.getString("asr_start_time", Fajr_time);
-        String Asr_iqama_times = salat_times.getString("asr_iqama_time", Fajr_time_iqama);
-
-        String Maghrib_start_times = salat_times.getString("maghrib_start_time", Fajr_time);
-        String Maghrib_iqama_times = salat_times.getString("maghrib_iqama_time", Fajr_time_iqama);
-
-        String Isha_start_times = salat_times.getString("isha_start_time", Fajr_time);
-        String Isha_iqama_times = salat_times.getString("isha_iqama_time", Fajr_time_iqama);
+//        update_salat_times_view(latest_salat_times);
+    }
 
 
-        // Now we update the textvies in activity_main
+    public void update_salat_times_view(SalatTimes latest_salat_times){
+        TextView fajr_start_time = findViewById(R.id.fajr_start_time);
+        fajr_start_time.setText(latest_salat_times.fajr_athan);
 
-        TextView fajr_start_time = (TextView) findViewById(R.id.fajr_start_time);
-        fajr_start_time.setText(Fajr_start_times);
-
-        TextView fajr_iqama_time = (TextView) findViewById(R.id.fajr_iqama_time);
-        fajr_iqama_time.setText(Fajr_iqama_times);
-
-
-        TextView zuhr_start_time = (TextView) findViewById(R.id.zuhr_start_time);
-        zuhr_start_time.setText(Zuhr_start_times);
-
-        TextView zuhr_iqama_time = (TextView) findViewById(R.id.zuhr_iqama_time);
-        zuhr_iqama_time.setText(Zuhr_iqama_times);
+        TextView fajr_iqama_time = findViewById(R.id.fajr_iqama_time);
+        fajr_iqama_time.setText(latest_salat_times.fajr_iqama);
 
 
-        TextView asr_start_time = (TextView) findViewById(R.id.asr_start_time);
-        asr_start_time.setText(Asr_start_times);
+        TextView zuhr_start_time = findViewById(R.id.zuhr_start_time);
+        zuhr_start_time.setText(latest_salat_times.thuhr_athan);
 
-        TextView asr_iqama_time = (TextView) findViewById(R.id.asr_iqama_time);
-        asr_iqama_time.setText(Asr_iqama_times);
-
-
-        TextView maghrib_start_time = (TextView) findViewById(R.id.maghrib_start_time);
-        maghrib_start_time.setText(Maghrib_start_times);
-
-        TextView maghrib_iqama_time = (TextView) findViewById(R.id.maghrib_iqama_time);
-        maghrib_iqama_time.setText(Maghrib_iqama_times);
+        TextView zuhr_iqama_time = findViewById(R.id.zuhr_iqama_time);
+        zuhr_iqama_time.setText(latest_salat_times.thuhr_iqama);
 
 
-        TextView isha_start_time = (TextView) findViewById(R.id.isha_start_time);
-        isha_start_time.setText(Isha_start_times);
+        TextView asr_start_time = findViewById(R.id.asr_start_time);
+        asr_start_time.setText(latest_salat_times.asr_athan);
 
-        TextView isha_iqama_time = (TextView) findViewById(R.id.isha_iqama_time);
-        isha_iqama_time.setText(Isha_iqama_times);
+        TextView asr_iqama_time = findViewById(R.id.asr_iqama_time);
+        asr_iqama_time.setText(latest_salat_times.asr_iqama);
 
 
-        int hour_current = salat_times.getInt("hour", hour);
-        int minute_current = salat_times.getInt("minute", minute);
-        int second_current = salat_times.getInt("second", second);
-        int Month_current = salat_times.getInt("Month", Month);
-        int Date_current = salat_times.getInt("Date", Date);
-        int Year_current = salat_times.getInt("Year", Year);
-        int AmPm_current = salat_times.getInt("AmPm", AmPm);
+        TextView maghrib_start_time = findViewById(R.id.maghrib_start_time);
+        maghrib_start_time.setText(latest_salat_times.maghrib_athan);
+
+        TextView maghrib_iqama_time = findViewById(R.id.maghrib_iqama_time);
+        maghrib_iqama_time.setText(latest_salat_times.maghrib_iqama);
+
+
+        TextView isha_start_time = findViewById(R.id.isha_start_time);
+        isha_start_time.setText(latest_salat_times.isha_athan);
+
+        TextView isha_iqama_time = findViewById(R.id.isha_iqama_time);
+        isha_iqama_time.setText(latest_salat_times.isha_iqama);
+
+
 
         String am_or_pm;
-        if (AmPm == 0) {
+        if (latest_salat_times._am_pm == 0) {
             am_or_pm = "AM";
         } else {
             am_or_pm = "PM";
         }
 
-        String Current_time = Integer.toString(Month_current+1) + "/" + Integer.toString(Date_current) + "/" + Integer.toString(Year_current) + " at " + Integer.toString(hour_current) + ":" + Integer.toString(minute_current) + ":" + Integer.toString(second_current) + am_or_pm;
+        String Current_time = Integer.toString(latest_salat_times._month+1) + "/" +
+                Integer.toString(latest_salat_times._date) + "/" +
+                Integer.toString(latest_salat_times._year) + " at " +
+                Integer.toString(latest_salat_times._hour) + ":" +
+                Integer.toString(latest_salat_times._minute) + ":" +
+                Integer.toString(latest_salat_times._second) + am_or_pm;
 
         TextView current_time = (TextView) findViewById(R.id.salat_time_updated);
         current_time.setText(Current_time);
 
-//        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
-//        RegisterAlarmBroadcast();
-
-        //alarm.SetAlarm(this);
-
-
-
-
-        /*
-
-        To save a value in using sharedpreferences:
-
-        SharedPreferences pref = this.getSharedPreferences("Test",0);
-                Editor editor = pref.edit();
-        editor.putString("VALUE", value);
-                editor.commit();
-
-        And get it like that:
-
-        SharedPreferences prfs = getSharedPreferences("Test", Context.MODE_PRIVATE);
-                String v= prfs.getString("VALUE", "");
-
-
-         */
-
-
-        // Using Elements to get the Meta data
-        // Elements description = document.select("meta[name=description]");
-        //Elements description = document.select("<tbody>");
-        // Locate the content attribute
-        //desc = description.attr("<td>");
-        //SaveInPreference(this,"fajr_start_time","100");
-        //getPrefString(this,fajr,"fajr_start_time");
-
-        // preference stuff...?
-        // showUserSettings();
+        Log.d("DEBUG TIME WHEN UPDATED", Current_time);
     }
 
+    public void update_latest_hadith(Hadith hadith){
+        TextView _hadith = findViewById(R.id.hadith_textview);
+        Typeface font = Typeface.DEFAULT;
+
+        if (Font_style.equals(Integer.toString(3))){//Integer.toString(0))){// Integer.toString(0)){
+            font = Typeface.createFromAsset(getAssets(), "DancingScript-Bold.ttf");
+        }
+        else if (Font_style.equals(Integer.toString(4))){// == Integer.toString(1)){
+            font = Typeface.createFromAsset(getAssets(), "FlyBoyBB.ttf");
+        }
+        else if (Font_style.equals(Integer.toString(1))){// == Integer.toString(1)){
+            font = Typeface.createFromAsset(getAssets(), "Admiration Pains.ttf");
+        }
+        else if (Font_style.equals(Integer.toString(2))){// == Integer.toString(1)){
+            font = Typeface.createFromAsset(getAssets(), "always forever.ttf");
+        }
+        else if (Font_style.equals(Integer.toString(5))){// == Integer.toString(1)){
+            font = Typeface.createFromAsset(getAssets(), "Milton_One.ttf");
+        }
+        else if(Font_style.equals(Integer.toString(0))){// == Integer.toString(1)){){
+            font = Typeface.DEFAULT;
+        }
+
+
+        _hadith.setText("Hadith of the day:\n" + hadith.hadith_title + "   " + hadith.hadith_text + "\n");
+        _hadith.setTypeface(font);
+
+        System.out.println(hadith.hadith_title + hadith.hadith_text);
+    }
 
     public void showPopup(View v) {
-//        mediaPlayer = MediaPlayer.create(this, R.raw.adhan);
-//        mediaPlayer.seekTo(0);
-//        mediaPlayer.start();
-//        RegisterAlarmBroadcast();
-
-
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
         MenuInflater inflater = popup.getMenuInflater();
@@ -319,12 +257,19 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
 
     public void start_alarm() {
+        SalatTimes latest_salat_times = salat_times.get_salat_times();
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 1000;
         Calendar cal = Calendar.getInstance();
 
+        if(latest_salat_times.fajr_athan == ""){
+            Toast.makeText(this, "Fajr_time is empty", Toast.LENGTH_SHORT).show();
+
+        }
 //        Log.d("DEBUG", Fajr_time);
         cal.add(Calendar.SECOND, 2);
+        cal.add(Calendar.HOUR, 14);
+
         manager.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(), 1000, pendingIntent);
     }
 
@@ -479,598 +424,6 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         return pref.getAll();
     }
 
-    // Title AsyncTask
-    private class Title extends AsyncTask<Void, Void, Void> {
-        String title;
-
-
-        //Context settings = getApplicationContext();
-        //SaveInPreference(this,"fajr_start_time","100");
-
-        /*
-            SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putInt("homeScore", YOUR_HOME_SCORE);
-
-// Apply the edits!
-            editor.apply();
-
-// Get from the SharedPreferences
-            SharedPreferences settings = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-            int homeScore = settings.getInt("homeScore", 0);
-*/
-
-        //fajr_editor.putString("fajr_start_time","1");
-        //fajr_editor.commit();
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog = new ProgressDialog(MainActivity.this);
-            mProgressDialog.setTitle("Fetching Salat Times Now");
-            mProgressDialog.setMessage("Loading...");
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            String TAG = "Getting Title";
-            try {
-                // Url of alfarooq website
-                String url = "http://alfarooqmasjid.org";
-                // Fetch the html webpage
-                Document doc = Jsoup.connect(url).get();
-                // get the title of the url
-                String Title = doc.title();
-                // print it out
-                System.out.println("Title: " + Title);
-                // Get the table of data from the url
-                Elements tbody = doc.select("tbody");
-                // print it out
-                System.out.println("tbody.first: " + tbody.first());
-
-                // get the table of salat times
-                Elements tr = tbody.select("tr");
-                // from the table, we get the first element
-                Elements Fajr = tr.eq(0);
-                // now we get the time
-                Fajr_time = Fajr.select("td").eq(1).text();
-                Fajr_time_iqama = Fajr.select("td").eq(2).text();
-
-                Elements Zuhr = tr.eq(1);
-                Zuhr_time = Zuhr.select("td").eq(1).text();
-                Zuhr_time_iqama = Zuhr.select("td").eq(2).text();
-                Elements Asr = tr.eq(2);
-                Asr_time = Asr.select("td").eq(1).text();
-                Asr_time_iqama = Asr.select("td").eq(2).text();
-                Elements Maghrib = tr.eq(3);
-                Maghrib_time = Maghrib.select("td").eq(1).text();
-                Maghrib_time_iqama = Maghrib.select("td").eq(2).text();
-                Elements Isha = tr.eq(4);
-                Isha_time = Isha.select("td").eq(1).text();
-                Isha_time_iqama = Isha.select("td").eq(2).text();
-
-                title = Fajr_time + "," + Zuhr_time + "," + Asr_time + "," + Maghrib_time + "," + Isha_time;
-
-                // getting hadith
-
-                // problem: some book volumes have different number of chapters, and different volumes.
-                // to find number of volumes -> search for book_number
-                // to find number of chapters -> search for echapno
-                // then generate random number of bounded by max size of volume and chapter number.
-
-                // so first find website
-                // next find maxs
-                // then generate bounded random number
-                // then finally display
-
-                // alternative is to look at each volume, then chapter to obtain list of maximum bounds
-
-
-//                Random hadith_book = new Random();
-//                int hadith_book_number = hadith_book.nextInt(97);
-
-//                String hadith_url = "http://sunnah.com/bukhari/"; // + String.valueOf(hadith_book_number);
-
-
-                // problem: when app is run before configuring setting, it will crash here
-                // so we will try to catch it first
-
-                try {
-                    Log.e("DEBUG_Hadith_source",Hadith_source);
-
-                    // Fetch the html webpage using one of the below strings:
-                    if (Hadith_source.equals(Integer.toString(1))) {
-                        hadith_url = "http://sunnah.com/bukhari/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(2))) {
-                        hadith_url = "http://sunnah.com/muslim/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(3))) {
-                        hadith_url = "http://sunnah.com/nasai/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(4))) {
-                        hadith_url = "http://sunnah.com/abudawud/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(5))) {
-                        hadith_url = "http://sunnah.com/tirmidhi/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(6))) {
-                        hadith_url = "http://sunnah.com/ibnmajah/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(7))) {
-                        hadith_url = "http://sunnah.com/malik/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(8))) {
-                        hadith_url = "http://sunnah.com/nawawi40/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(9))) {
-                        hadith_url = "http://sunnah.com/riyadussaliheen/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(10))) {
-                        hadith_url = "http://sunnah.com/adab/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(11))) {
-                        hadith_url = "http://sunnah.com/qudsi40/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(12))) {
-                        hadith_url = "http://sunnah.com/shamail/";// + String.valueOf(hadith_book_number);
-                    } else if (Hadith_source.equals(Integer.toString(13))) {
-                        hadith_url = "http://sunnah.com/bulugh/";// + String.valueOf(hadith_book_number);
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                    Log.d(TAG, "... Failed");
-
-                    //throw new RuntimeException(e);
-                }
-
-                // debug statement to see how many chapters we have
-//                String debug_hadith_url = "http://sunnah.com/bukhari/";
-
-                // lazy me
-                String debug_hadith_url = hadith_url;
-                Document debug_hadith_doc = Jsoup.connect(debug_hadith_url).get();
-
-
-                Elements book_num_classes = debug_hadith_doc.getElementsByClass("book_number");
-
-
-                // Now get size of class -> bound of max random number
-                int max_book_size = book_num_classes.size();
-
-                // debug output
-                Log.e("DEBUG_max_book_size",Integer.toString(max_book_size));
-
-
-                Random hadith_book = new Random();
-
-                // now we generate the random number for the hadith volume
-                // sometimes we get a hadith_book_number = 0, which doesn't exist
-                int hadith_book_number = hadith_book.nextInt(max_book_size - 1) + 1;
-
-                // debug output
-                Log.e("DEBUG_hadith_book_num", Integer.toString(hadith_book_number));
-
-
-                // now we regenerate url with new book volume number
-
-                debug_hadith_url = debug_hadith_url + Integer.toString(hadith_book_number);
-                hadith_url = debug_hadith_url;
-                // debug output
-                Log.e("DEBUG_url",debug_hadith_url);
-
-
-                // now we look for echapno for chapter number
-                // first reload document with chapter
-                debug_hadith_doc = Jsoup.connect(debug_hadith_url).get();
-
-
-                Elements chapeter_numbers = debug_hadith_doc.getElementsByClass("echapno");
-                int max_chapter_size = chapeter_numbers.size();
-
-                // debug output
-                Log.e("DEBUG_max_chapter_size",Integer.toString(max_chapter_size));
-
-
-                Random chapter_number = new Random();
-                int chapter_number_selected = chapter_number.nextInt(max_chapter_size - 1) + 1;
-
-                // debug output
-                Log.e("DEBUG_chapter_number_se",Integer.toString(chapter_number_selected));
-
-                // final update of hadith url
-                debug_hadith_url+= "/" + Integer.toString(chapter_number_selected);
-
-                // debug output
-                Log.e("DEBUG_hadith_url",debug_hadith_url);
-
-
-//
-//                String book_num =hadith_doc.getElementsByClass("book_number").text();
-//                Log.e("DEBUG",book_num);
-
-                // generate random number to pick up hadith.
-
-//                Random hadith_number_random = new Random();
-                // hadith_number_random.nextInt(7);
-
-//                int hadith_number = (hadith_number_random.nextInt(7));
-
-                // Hadith title
-
-                //int hadith_number =1;
-//                hadith_title = hadith_classes.eq(hadith_number).eq(0).eq(0).text();
-
-
-                Document hadith_doc = Jsoup.connect(debug_hadith_url).get();
-                // get the title of the url
-                String title = hadith_doc.title();
-                // print it out
-                System.out.println("Title: " + title);
-                // Get the table of data from the url
-                Elements hadith_body = hadith_doc.select("div");
-                // print it out
-                Elements hadith_classes = hadith_doc.getElementsByClass("hadith_narrated");
-
-                Log.e("DEBUG_hadith_classes",hadith_classes.toString());
-
-
-                hadith_title = hadith_classes.text();
-                Log.e("DEBUG_hadith_title",hadith_title);
-
-
-
-//                hadith_title = hadith_classes.eq(chapter_number_selected).eq(0).eq(0).text();
-
-                //System.out.println("hadith 1:  " + hadith_title);
-
-
-                Elements hadith_texts = hadith_doc.getElementsByClass("text_details");
-
-                hadith_text = hadith_texts.text();
-
-
-
-//                Log.e("DEBUG_hadith_doc",hadith_doc.toString());
-
-                Log.e("DEBUG_hadith_text",hadith_text.toString());
-
-//                hadith_text = hadith_texts.eq(chapter_number_selected).eq(0).eq(0).text();
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d(TAG, "... Failed");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // Get current time. should match when we updated salat times
-            Calendar c = Calendar.getInstance();
-            hour = c.get(Calendar.HOUR);
-            minute = c.get(Calendar.MINUTE);
-            second = c.get(Calendar.SECOND);
-            Month = c.get(Calendar.MONTH);
-            Date = c.get(Calendar.DATE);
-            Year = c.get(Calendar.YEAR);
-            AmPm = c.get(Calendar.AM_PM);
-
-            String am_or_pm;
-            if (AmPm == 0) {
-                am_or_pm = "AM";
-            } else {
-                am_or_pm = "PM";
-            }
-
-            String Current_time = Integer.toString(Month + 1) + "/" + Integer.toString(Date) + "/" + Integer.toString(Year) + " at " + Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second) + am_or_pm;
-
-            TextView current_time = (TextView) findViewById(R.id.salat_time_updated);
-            current_time.setText(Current_time);
-
-
-            TextView fajr_start_time = (TextView) findViewById(R.id.fajr_start_time);
-            fajr_start_time.setText(Fajr_time);
-
-            TextView fajr_iqama_time = (TextView) findViewById(R.id.fajr_iqama_time);
-            fajr_iqama_time.setText(Fajr_time_iqama);
-
-            TextView zuhr_start_time = (TextView) findViewById(R.id.zuhr_start_time);
-            zuhr_start_time.setText(Zuhr_time);
-
-            TextView zuhr_iqama_time = (TextView) findViewById(R.id.zuhr_iqama_time);
-            zuhr_iqama_time.setText(Zuhr_time);
-
-            TextView asr_start_time = (TextView) findViewById(R.id.asr_start_time);
-            asr_start_time.setText(Asr_time);
-
-            TextView asr_iqama_time = (TextView) findViewById(R.id.asr_iqama_time);
-            asr_iqama_time.setText(Asr_time_iqama);
-
-            TextView maghrib_start_time = (TextView) findViewById(R.id.maghrib_start_time);
-            maghrib_start_time.setText(Maghrib_time);
-
-            TextView maghrib_iqama_time = (TextView) findViewById(R.id.maghrib_iqama_time);
-            maghrib_iqama_time.setText(Maghrib_time_iqama);
-
-            TextView isha_start_time = (TextView) findViewById(R.id.isha_start_time);
-            isha_start_time.setText(Isha_time);
-
-            TextView isha_iqama_time = (TextView) findViewById(R.id.isha_iqama_time);
-            isha_iqama_time.setText(Isha_time_iqama);
-
-            Context settings = getApplicationContext();
-            SaveInPreference(settings, "fajr_start_time", "100");
-
-            // Now we will save the times...
-            SharedPreferences salat_times = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-            SharedPreferences.Editor editor = salat_times.edit();
-            editor.putString("fajr_start_time", Fajr_time);
-            editor.putString("fajr_iqama_time", Fajr_time_iqama);
-            editor.putString("zuhr_start_time", Zuhr_time);
-            editor.putString("zuhr_iqama_time", Zuhr_time_iqama);
-            editor.putString("asr_start_time", Asr_time);
-            editor.putString("asr_iqama_time", Asr_time_iqama);
-            editor.putString("maghrib_start_time", Maghrib_time);
-            editor.putString("maghrib_iqama_time", Maghrib_time_iqama);
-            editor.putString("isha_start_time", Isha_time);
-            editor.putString("isha_iqama_time", Isha_time_iqama);
-
-            // For the times
-
-            editor.putInt("hour", hour);
-            editor.putInt("minute", minute);
-            editor.putInt("second", second);
-            editor.putInt("Month", Month);
-            editor.putInt("Date", Date);
-            editor.putInt("Year", Year);
-            editor.putInt("AmPm", AmPm);
-
-            // for user settings on font style and hadith source
-
-            editor.putString("saved_font_style",Font_style);
-            editor.putString("saved_hadith_source",Hadith_source);
-
-            editor.apply();
-
-
-            // Time to get hadiths
-            TextView hadith = (TextView) findViewById(R.id.hadith_textview);
-
-//            Typeface font = Typeface.createFromAsset(getAssets(), "DancingScript-Bold.ttf");
-
-            if (Font_style.equals(Integer.toString(3))){//Integer.toString(0))){// Integer.toString(0)){
-                Typeface font = Typeface.createFromAsset(getAssets(), "DancingScript-Bold.ttf");
-                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
-                hadith.setTypeface(font);
-
-            }
-            else if (Font_style.equals(Integer.toString(4))){// == Integer.toString(1)){
-                Typeface font = Typeface.createFromAsset(getAssets(), "FlyBoyBB.ttf");
-                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
-                hadith.setTypeface(font);
-            }
-            else if (Font_style.equals(Integer.toString(1))){// == Integer.toString(1)){
-                Typeface font = Typeface.createFromAsset(getAssets(), "Admiration Pains.ttf");
-                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
-                hadith.setTypeface(font);
-            }
-            else if (Font_style.equals(Integer.toString(2))){// == Integer.toString(1)){
-                Typeface font = Typeface.createFromAsset(getAssets(), "always forever.ttf");
-                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
-                hadith.setTypeface(font);
-            }
-            else if (Font_style.equals(Integer.toString(5))){// == Integer.toString(1)){
-                Typeface font = Typeface.createFromAsset(getAssets(), "Milton_One.ttf");
-                hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
-                hadith.setTypeface(font);
-            }
-
-
-
-
-//            hadith.setText("Hadith of the day:\n" + hadith_title + "   " + hadith_text + "\n");
-//            hadith.setTypeface(font);
-
-            System.out.println(hadith_title + hadith_text);
-
-
-            mProgressDialog.dismiss();
-        }
-    }
-
-    // start_fajr_alarm_async_task AsyncTask
-    public class start_fajr_alarm_async_task extends AsyncTask<Void, Void, Void> {
-        private final Context mcontext;
-
-        public  start_fajr_alarm_async_task(Context context){
-            mcontext = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Toast.makeText(getApplicationContext(), "Arming Alarm", Toast.LENGTH_LONG).show();
-
-//            mProgressDialog = new ProgressDialog(MainActivity.this);
-//            mProgressDialog.setTitle("Arming Alarm!");
-//            mProgressDialog.setMessage("Loading...");
-//            mProgressDialog.setIndeterminate(false);
-//
-//            mProgressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-//            Toast.makeText(getApplicationContext(), "Arming Alarm in background", Toast.LENGTH_LONG).show();
-//            AlarmManager alarmMgr;
-//            PendingIntent alarmIntent;
-//
-//
-//            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-////            Intent intent = new Intent(context, RegisterAlarmBroadcast);
-//            Intent intent = new Intent("broadcast_alarm");
-//
-//            alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-//
-//
-//            // get fajr alarm
-//            SharedPreferences salat_times = getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-//            String Fajr_start_times = salat_times.getString("fajr_start_time", Fajr_time);
-//
-//
-//            Log.e("DEBUG_fajr_start", Fajr_start_times);
-//
-//            // take the hour
-//            int Fajr_Hour = Integer.parseInt(Character.toString(Fajr_start_times.charAt(0)));
-//            int Fajr_Minutes = Integer.parseInt(Character.toString(Fajr_start_times.charAt(2)));
-//            Fajr_Minutes = Fajr_Minutes * 10 + Integer.parseInt(Character.toString(Fajr_start_times.charAt(3)));
-//
-//            Log.e("DEBUG_fajr_Hour", Integer.toString(Fajr_Hour));
-//            Log.e("DEBUG_fajr_Minutes",Integer.toString(Fajr_Minutes));
-//
-//
-//
-//            int result = Fajr_Hour * 60 * 60 * 1000 + Fajr_Minutes * 60 * 1000;
-//
-//            Log.e("DEBUG_fajr_result",Integer.toString(result));
-//
-//
-//            alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, result, AlarmManager.INTERVAL_DAY, alarmIntent);
-//
-//
-//            Toast.makeText(context, "Fajr Alarm Set to " + Fajr_Hour + ":" + Fajr_Minutes, Toast.LENGTH_LONG).show();
-
-
-
-//
-            String alarm = mcontext.ALARM_SERVICE;
-//            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-            AlarmManager am = ( AlarmManager ) mcontext.getSystemService(mcontext.ALARM_SERVICE);
-//            Intent intent = new Intent( "REFRESH_THIS" );
-//
-//
-//
-            Intent intent = new Intent(mcontext,AlarmActivitiy.class);
-            startActivity(intent);
-//
-
-
-//            Intent intent = new Intent(context, AlarmActivitiy.class);
-
-
-//
-//
-//            PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0 );
-//
-//            int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-////            long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-//            long interval = 1000;
-//            long triggerTime = SystemClock.elapsedRealtime() + interval;
-//
-//            am.setRepeating(type, triggerTime, interval, pi);
-//
-
-
-
-
-
-
-
-
-
-
-
-
-                /*
-                AlarmManager alarmMgr;
-                PendingIntent alarmIntent;
-
-                alarmMgr = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(getApplicationContext(), Alarm.class);
-                alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
-
-                // Set the alarm to start at 8:30 a.m.
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(Calendar.HOUR_OF_DAY, 8);
-                calendar.set(Calendar.MINUTE, 30);
-                */
-            // Connect to the web site
-            //Document document = Jsoup.connect(url).get();
-            // Using Elements to get the Meta data
-            // Elements description = document.select("meta[name=description]");
-            //Elements description = document.select("<tbody>");
-            // Locate the content attribute
-            //desc = description.attr("<td>");
-
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // Set description into TextView
-            //TextView txtdesc = (TextView) findViewById(R.id.desctxt);
-            //txtdesc.setText(desc);
-
-//            mProgressDialog.dismiss();
-        }
-    }
-
-    // stop_fajr_alarm_async_task AsyncTask
-    private class stop_fajr_alarm_async_task extends AsyncTask<Void, Void, Void> {
-        Bitmap bitmap;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Toast.makeText(context, "Arming Alarm", Toast.LENGTH_LONG).show();
-//            mProgressDialog = new ProgressDialog(MainActivity.this);
-//            mProgressDialog.setTitle("Disarming Alarm");
-//            mProgressDialog.setMessage("Loading...");
-//            mProgressDialog.setIndeterminate(false);
-//            mProgressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            Toast.makeText(context, "Arming Alarm in background", Toast.LENGTH_LONG).show();
-
-            // alarmManager.cancel(pendingIntent);
-
-
-
-            // Do not call this function...
-            // getBaseContext().unregisterReceiver(mReceiver);
-            mediaPlayer.pause();
-
-
-            //alarm.CancelAlarm(getApplicationContext());
-            /*
-            try {
-                // Connect to the web site
-                Document document = Jsoup.connect(url).get();
-                // Using Elements to get the class data
-                Elements img = document.select("a[class=brand brand-image] img[src]");
-                // Locate the src attribute
-                String imgSrc = img.attr("src");
-                // Download image from URL
-                InputStream input = new java.net.URL(imgSrc).openStream();
-                // Decode Bitmap
-                bitmap = BitmapFactory.decodeStream(input);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            */
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // Set downloaded image into ImageView
-            /*
-            ImageView logoimg = (ImageView) findViewById(R.id.logo);
-            logoimg.setImageBitmap(bitmap);
-            */
-            mProgressDialog.dismiss();
-        }
-    }
-
 
     // saving preference stuff
     private void showUserSettings(){
@@ -1093,7 +446,8 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         Log.d("DEBUG",sharedPrefs.getString("prefHadithSource", "NULL"));
 
         // save font number in string format
-        Hadith_source = sharedPrefs.getString("prefHadithSource", "NULL");
+        Hadith  hadith = salat_times.get_hadith();
+        hadith.hadith_source = sharedPrefs.getString("prefHadithSource", "NULL");
 
         // try to save it now
         Context settings = getApplicationContext();
@@ -1115,7 +469,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
         // also try to save font style
         Context settings = getApplicationContext();
-        SaveInPreference(settings, "prefFontSource", "NULL");
+        SaveInPreference(settings, "prefFontSource", Font_style.toString());
 
 
 

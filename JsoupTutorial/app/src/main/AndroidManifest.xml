@@ -68,12 +68,6 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name="jsouptutorial.androidbegin.com.jsouptutorial.AlarmActivitiy"
-            android:label="@string/title_activity_alarm_activitiy"
-            android:theme="@style/AppTheme">
-        </activity>
-
     </application>
 
 </manifest>
