@@ -2,7 +2,11 @@ package jsouptutorial.androidbegin.com.jsouptutorial;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
@@ -99,7 +103,7 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         // Set fajr alarm
         start_fajr_alarm_button.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
-                Toast.makeText(getApplicationContext(), "Setting alarm 30 minutes after Fajr",Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "Setting alarm 30 minutes after Fajr",Toast.LENGTH_LONG).show();
                 start_alarm();
             }
         });
@@ -142,9 +146,11 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         new CountDownTimer(5000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                String time = "Updating : " + Long.toString(millisUntilFinished);
+                String time = "Auto updating";
                 Toast.makeText(getApplicationContext(), time,Toast.LENGTH_LONG).show();
-                if (latest_salat_times.is_stale()){
+                if (!latest_salat_times.is_stale()){
+                    Toast.makeText(getApplicationContext(), "Already latest",Toast.LENGTH_LONG).show();
+                    update_salat_times_view(latest_salat_times);
                     this.cancel();
                 }
             }
@@ -255,22 +261,76 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
     }
 
+    private Date convert_salat_to_date(String time){
+        Date date= null;
+        String salat_time="";
+        try {
+            if (time.equals("fajr_iqama")){
+                salat_time = salat_times.get_salat_times().fajr_iqama;
+            }
+            else if (time.equals("thuhr_iqama")){
+                salat_time = salat_times.get_salat_times().fajr_iqama;
+            }
+            else if (time.equals("asr_iqama")){
+                salat_time = salat_times.get_salat_times().fajr_iqama;
+            }
+            else if (time.equals("maghrib_iqama")){
+                salat_time = salat_times.get_salat_times().fajr_iqama;
+            }
+            else if (time.equals("isha_iqama")){
+                salat_time = salat_times.get_salat_times().fajr_iqama;
+            }
+            else{
+                System.out.println("ERROR, DONT NOW WHAT " + time + " is?");
+            }
+
+            date = new SimpleDateFormat("HH:mm").parse(salat_time);
+            int h = date.getHours();
+            int m = date.getMinutes();
+            System.out.println(Integer.toString(h) + " and " + Integer.toString(m));
+            System.out.println(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    private void add_alarm(Date date){
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.SECOND, date.getSeconds());
+        cal.add(Calendar.HOUR, date.getHours());
+        manager.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(), 1000, pendingIntent);
+    }
+
+    public void arm_salat(String salat_name){
+        Date date = convert_salat_to_date(salat_name);
+        add_alarm(date);
+    }
 
     public void start_alarm() {
         SalatTimes latest_salat_times = salat_times.get_salat_times();
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int interval = 1000;
-        Calendar cal = Calendar.getInstance();
 
         if(latest_salat_times.fajr_athan == ""){
             Toast.makeText(this, "Fajr_time is empty", Toast.LENGTH_SHORT).show();
-
         }
-//        Log.d("DEBUG", Fajr_time);
-        cal.add(Calendar.SECOND, 2);
-        cal.add(Calendar.HOUR, 14);
+        else{
+            Context settings = getApplicationContext();
+            String alarm_state = getPrefString(settings, "alarm_state", "null");
+            if(alarm_state.contains("on")){
+                Toast.makeText(this, "alarm already on", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                arm_salat("fajr_iqama");
+                arm_salat("thuhr_iqama");
+                arm_salat("asr_iqama");
+                arm_salat("maghrib_iqama");
+                arm_salat("isha_iqama");
 
-        manager.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(), 1000, pendingIntent);
+                Toast.makeText(this, "setting alarm on", Toast.LENGTH_SHORT).show();
+                SaveInPreference(settings, "alarm_state", "on");
+            }
+        }
     }
 
     public void stop_alarm() {
@@ -279,9 +339,11 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
 
 
         Toast.makeText(this, "stopping athan.", Toast.LENGTH_SHORT).show();
-
+        Context settings = getApplicationContext();
+        SaveInPreference(settings, "alarm_state", "off");
         Intent intent = new Intent(this, DismissBroadcast.class);
         getApplicationContext().sendBroadcast(intent);
+
 
         Toast.makeText(this, "You better have gotten up \uD83D\uDE20 ", Toast.LENGTH_SHORT).show();
     }
