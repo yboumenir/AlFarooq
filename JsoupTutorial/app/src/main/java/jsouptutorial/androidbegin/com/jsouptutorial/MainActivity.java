@@ -78,8 +78,10 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         context = getApplicationContext();
         salat_times = new GrabSalatTimes(context);
 
-        alarm_intent = new Intent(this, MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, alarm_intent, 0);
+        for (int id=0; id<5; id++){
+            alarm_intent = new Intent(this, MyReceiver.class);
+            pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), id, alarm_intent, 0);
+        }
 
         // Locate the Buttons in activity_main.xml
         Button titlebutton = (Button) findViewById(R.id.titlebutton);
@@ -265,20 +267,20 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         Date date= null;
         String salat_time="";
         try {
-            if (time.equals("fajr_iqama")){
-                salat_time = salat_times.get_salat_times().fajr_iqama;
+            if (time.contains("fajr")){
+                salat_time = salat_times.get_salat_times().fajr_athan;
             }
-            else if (time.equals("thuhr_iqama")){
-                salat_time = salat_times.get_salat_times().fajr_iqama;
+            else if (time.contains("thuhr")){
+                salat_time = salat_times.get_salat_times().thuhr_athan;
             }
-            else if (time.equals("asr_iqama")){
-                salat_time = salat_times.get_salat_times().fajr_iqama;
+            else if (time.contains("asr")){
+                salat_time = salat_times.get_salat_times().asr_athan;
             }
-            else if (time.equals("maghrib_iqama")){
-                salat_time = salat_times.get_salat_times().fajr_iqama;
+            else if (time.contains("maghrib")){
+                salat_time = salat_times.get_salat_times().maghrib_athan;
             }
-            else if (time.equals("isha_iqama")){
-                salat_time = salat_times.get_salat_times().fajr_iqama;
+            else if (time.contains("isha")){
+                salat_time = salat_times.get_salat_times().isha_athan;
             }
             else{
                 System.out.println("ERROR, DONT NOW WHAT " + time + " is?");
@@ -295,17 +297,46 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
         return date;
     }
 
-    private void add_alarm(Date date){
+    private int salat_pending_intent_id(String time){
+        int id=0;
+
+            if (time.contains("fajr")){
+                id=0;
+            }
+            else if (time.contains("thuhr")){
+                id=1;
+            }
+            else if (time.contains("asr")){
+                id=2;
+            }
+            else if (time.contains("maghrib")){
+                id=3;
+            }
+            else if (time.contains("isha")){
+                id=4;
+            }
+            else{
+                System.out.println("ERROR, DONT NOW WHAT " + time + " is?");
+            }
+
+        return id;
+    }
+
+    private void add_alarm(Date date, PendingIntent pendingIntent){
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, date.getSeconds());
         cal.add(Calendar.HOUR, date.getHours());
-        manager.setRepeating(AlarmManager.RTC, cal.getTimeInMillis(), 1000, pendingIntent);
+        cal.add(Calendar.MINUTE, date.getMinutes());
+        int clock_offset = 60*1000*15;
+
+        manager.setRepeating(AlarmManager.RTC, cal.getTimeInMillis() + clock_offset, 1000, pendingIntent);
     }
 
     public void arm_salat(String salat_name){
         Date date = convert_salat_to_date(salat_name);
-        add_alarm(date);
+        int id = salat_pending_intent_id(salat_name);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id, alarm_intent,0);
+        add_alarm(date,pendingIntent);
     }
 
     public void start_alarm() {
@@ -321,11 +352,11 @@ public class MainActivity extends Activity implements PopupMenu.OnMenuItemClickL
                 Toast.makeText(this, "alarm already on", Toast.LENGTH_SHORT).show();
             }
             else{
-                arm_salat("fajr_iqama");
-                arm_salat("thuhr_iqama");
-                arm_salat("asr_iqama");
-                arm_salat("maghrib_iqama");
-                arm_salat("isha_iqama");
+                arm_salat("fajr_athan");
+                arm_salat("thuhr_athan");
+                arm_salat("asr_athan");
+                arm_salat("maghrib_athan");
+                arm_salat("isha_athan");
 
                 Toast.makeText(this, "setting alarm on", Toast.LENGTH_SHORT).show();
                 SaveInPreference(settings, "alarm_state", "on");
